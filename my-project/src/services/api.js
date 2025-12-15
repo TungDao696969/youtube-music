@@ -2,9 +2,9 @@ import { navigate } from "../routers/router";
 
 const BASE_URL = "https://youtube-music.f8team.dev/api";
 
-export const refershToken = async () => {
-  const refershToken = localStorage.getItem("refresh_token");
-  if (!refershToken) {
+export const refreshToken = async () => {
+  const refreshToken = localStorage.getItem("refresh_token");
+  if (!refreshToken) {
     return null;
   }
 
@@ -14,17 +14,17 @@ export const refershToken = async () => {
       headers: {
         "Content-type": "application/json",
       },
-      body: JSON.stringify({ refresh_token: refershToken }),
+      body: JSON.stringify({ refresh_token: refreshToken }),
     });
 
     if (!res.ok) {
       return null;
     }
 
-    const data = res.json();
+    const data = await res.json();
     localStorage.setItem("access_token", data.access_token);
 
-    return data.refresh_token;
+    return data.access_token;
   } catch (error) {
     console.log(error);
     return null;
@@ -113,13 +113,13 @@ export const getListMoots = async () => {
 };
 
 export const getmeDetail = async () => {
-  const token = localStorage.getItem("access_token");
+  let token = localStorage.getItem("access_token");
   if (!token) {
     throw new Error("Chưa đăng nhập");
   }
 
   try {
-    const res = await fetch(`${BASE_URL}/auth/me`, {
+    let res = await fetch(`${BASE_URL}/auth/me`, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -127,7 +127,7 @@ export const getmeDetail = async () => {
     });
 
     if (res.status === 401) {
-      const newToken = await refershToken();
+      const newToken = await refreshToken();
 
       if (!newToken) {
         localStorage.clear();
@@ -135,13 +135,17 @@ export const getmeDetail = async () => {
         navigate("/auth");
         return;
       }
-
+      token = newToken;
       // gọi lại api cũ
       res = await fetch(`${BASE_URL}/auth/me`, {
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${newToken}`,
         },
       });
+    }
+
+    if (!res.ok) {
+      throw new Error("Không lấy được thông tin user");
     }
 
     return res.json();
@@ -151,13 +155,13 @@ export const getmeDetail = async () => {
 };
 
 export const updateMe = async (data) => {
-  const token = localStorage.getItem("access_token");
+  let token = localStorage.getItem("access_token");
   if (!token) {
     throw new Error("Chưa đăng nhập");
   }
 
   try {
-    const res = await fetch(`${BASE_URL}/auth/me`, {
+    let res = await fetch(`${BASE_URL}/auth/me`, {
       method: "PATCH",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -175,7 +179,7 @@ export const updateMe = async (data) => {
         navigate("/auth");
         return;
       }
-
+      token = newToken
       res = await fetch(`${BASE_URL}/auth/me`, {
         method: "PATCH",
         headers: {
@@ -197,12 +201,12 @@ export const updateMe = async (data) => {
 };
 
 export const apiChangePassword = async (data) => {
-  const token = localStorage.getItem("access_token");
+  let token = localStorage.getItem("access_token");
   if (!token) {
     throw new Error("Bạn chưa đăng nhập");
   }
   try {
-    const res = await fetch(`${BASE_URL}/auth/change-password`, {
+    let res = await fetch(`${BASE_URL}/auth/change-password`, {
       method: "PATCH",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -210,6 +214,7 @@ export const apiChangePassword = async (data) => {
       },
       body: JSON.stringify(data),
     });
+
     if (res.status === 401) {
       const newToken = await refreshToken();
 
@@ -220,6 +225,7 @@ export const apiChangePassword = async (data) => {
         return;
       }
 
+      token = newToken
       res = await fetch(`${BASE_URL}/auth/change-password`, {
         method: "PATCH",
         headers: {
