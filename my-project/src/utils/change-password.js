@@ -22,7 +22,8 @@ export const initChangePassword = async () => {
     try {
       const res = await apiChangePassword({ oldPassword, newPassword });
       alert("Đổi mk thành công vui lòng đăng nhập lại");
-      localStorage.clear();
+      localStorage.removeItem("access_token");
+      localStorage.removeItem("user");
       navigate("/auth");
     } catch (error) {
       console.log(error);

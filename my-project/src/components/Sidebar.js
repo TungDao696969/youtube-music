@@ -1,8 +1,8 @@
 export default function Sidebar() {
     return `
-        <aside class="bg-black w-15 p-4 border-gray-700 h-screen">
-        <nav class="flex flex-col space-y-3 w-full">
-            <a href="" class="flex flex-col items-center justify-center gap-1 p-3 hover:bg-white/10 rounded-xl transition group sidebar-active">
+        <aside class="fixed top-15 left-0 z-50 h-screen w-[72px] bg-black border-gray-700">
+        <nav class="flex flex-col space-y-3 w-full mt-5">
+            <a href="/" class="flex flex-col items-center justify-center gap-1 p-3 hover:bg-white/10 rounded-xl transition group sidebar-active">
                 <i class="fa-solid fa-house text-white text-xl"></i>
                 <span class="text-[11px] text-gray-300 group-hover:text-white">Home</span>
             </a>

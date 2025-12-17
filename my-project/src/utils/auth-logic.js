@@ -1,5 +1,6 @@
 import { navigate } from "../routers/router.js";
-import { getAuth, registerAuth } from "../services/api.js";
+import { getAuth, registerAuth, apiLogOut } from "../services/api.js";
+import { showAlert } from "./home-logic.js";
 
 export const initAuth = () => {
   const btnLogin = document.querySelector("#loginForm");
@@ -14,11 +15,14 @@ export const initAuth = () => {
       const res = await getAuth({ email, password });
       // Lưu token
       localStorage.setItem("access_token", res.access_token);
+      localStorage.setItem("refresh_token", res.refresh_token);
       localStorage.setItem("user", JSON.stringify(res.user));
 
       navigate("/");
+      showAlert("Đăng nhập thành công", "success");
     } catch (error) {
-      alert("Email hoặc mật khẩu sai");
+      // alert("Email hoặc mật khẩu sai");
+      showAlert("Email hoặc mật khẩu sai", "error");
     }
   });
 };
@@ -91,8 +95,31 @@ export const initRegiter = () => {
       localStorage.setItem("user", JSON.stringify(res.user));
 
       navigate("/");
+      showAlert("Đăng kí thành công. Đã đăng nhập !", "success");
     } catch (error) {
       alert("Đăng ký thất bại");
+    }
+  });
+};
+
+export const initLogout = async () => {
+  const btnLogout = document.querySelector("#btnLogout");
+  if (!btnLogout) return;
+
+  btnLogout.addEventListener("click", async (e) => {
+    e.preventDefault();
+    try {
+      const res = await apiLogOut();
+      localStorage.removeItem("access_token");
+      localStorage.removeItem("refresh_token");
+      localStorage.removeItem("user");
+      sessionStorage.clear();
+
+      showAlert("Đăng xuất thành công", "success");
+
+      navigate("/");
+    } catch (error) {
+      showAlert("Đăng xuất thất bại", "error");
     }
   });
 };

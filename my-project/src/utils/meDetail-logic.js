@@ -1,5 +1,6 @@
 import { navigate } from "../routers/router";
 import { getmeDetail, updateMe } from "../services/api";
+import { showAlert } from "./home-logic";
 
 export const initMeDetail = async () => {
   const emailInput = document.querySelector("#meEmail");
@@ -42,11 +43,10 @@ export const initMeDetail = async () => {
 
       localStorage.setItem("user", JSON.stringify(freshUser));
 
-      alert("Cập nhật thành công");
-
       navigate("/");
+      showAlert("Cập nhật thành công", "success");
     } catch (error) {
-      alert("Cập nhật thất bại");
+      showAlert("Cập nhật thất bại", "error");
     }
   });
 };

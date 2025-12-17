@@ -2,8 +2,8 @@ export default function Header() {
   const user = JSON.parse(localStorage.getItem("user") || "null");
   const isLoggedIn = !!user;
   return `
-        <header class="bg-black p-4 border-gray-700 flex items-center">
-      <div class="w-[30px] flex justify-between items-center gap-1">
+        <header class="fixed top-0 left-0 right-0 z-50 bg-black p-4 border-gray-700 flex items-center">
+      <div class="w-[30px] flex justify-between items-center gap-1 ml-2">
         <i class="fa-solid fa-bars text-white text-xl cursor-pointer"></i>
         <div class="flex items-center gap-0 cursor-pointer">
           <img
@@ -26,7 +26,7 @@ export default function Header() {
             id="searchInput"
             type="text"
             placeholder="Search..."
-            class="bg-[#292929]/80 pl-10 pr-3 py-2 rounded-lg w-[500px] focus:outline-none text-white"
+            class="bg-[#292929]/90 pl-10 pr-3 py-2 rounded-lg w-[500px] focus:outline-none text-white"
           />
         </div>
 
@@ -61,7 +61,7 @@ function renderAvatar(name) {
                bg-[#2a2a2a] rounded-lg shadow-lg overflow-hidden z-50">
       <a href="/auth/me" class="mb-4 cursor-pointer hover:bg-gray-500 p-2">Thông tin người dùng</a>
       <a href="/auth/change-password" class="mb-4 cursor-pointer hover:bg-gray-500 p-2">Đổi mật khẩu</a>
-      <button id="btnLogout" class="text-red-600 text-left cursor-pointer hover:bg-gray-500 p-2">Đăng xuất</button>
+      <a href="/auth/logout" id="btnLogout" class="text-red-600 text-left cursor-pointer hover:bg-gray-500 p-2">Đăng xuất</a>
     </div>
   </div>
   `;
