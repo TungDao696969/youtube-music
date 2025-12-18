@@ -64,7 +64,6 @@ export default function Home() {
             >
               <p class="text-neutral-400">Đang tải...</p>
             </div>
-
           </section>
 
           <section class = "mb-10">

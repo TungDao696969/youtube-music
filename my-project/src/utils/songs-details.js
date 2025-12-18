@@ -1,5 +1,7 @@
 import { getSongDetail } from "../services/api";
 import { playSong, setPlayQueue, getCurrentIndex } from "./player-logic";
+
+let currentTracks = [];
 export const initSongDetails = async (id) => {
   const container = document.getElementById("songDetails");
   container.innerHTML = `
@@ -11,23 +13,23 @@ export const initSongDetails = async (id) => {
 
     // ✅ tracks nằm trong album.tracks
     const tracks = Array.isArray(song.album?.tracks) ? song.album.tracks : [];
-
+    currentTracks = tracks;
     container.innerHTML = `
       <div class="flex justify-center">
         <section class="flex gap-12 px-10 py-10">
 
           <!-- LEFT -->
           <div class="w-[400px] flex-shrink-0 text-center">
-            <img
+            <img id="songDetailThumb"
               src="${song.thumbnails?.[0] || ""}"
               class="w-full rounded-xl shadow-lg mb-6"
             />
 
-            <h1 class="text-2xl font-bold mb-3">
+            <h1 id="songDetailTitle" class="text-2xl font-bold mb-3">
               ${song.title}
             </h1>
 
-            <p class="text-neutral-400 text-sm mb-2">
+            <p id="songDetailDuration" class="text-neutral-400 text-sm mb-2">
               Thời lượng: ${formatDuration(song.duration)}
             </p>
 
@@ -95,16 +97,15 @@ export const initSongDetails = async (id) => {
       </div>
     `;
 
-    container.addEventListener("click", (e) => {
+    container.addEventListener("click", async (e) => {
       const row = e.target.closest("[data-song-id]");
       if (!row) return;
 
-      const title = row.querySelector(".font-medium")?.textContent?.trim();
       const rows = [...container.querySelectorAll("[data-song-id]")];
 
       const queue = rows.map((item) => ({
         id: item.dataset.songId,
-        title,
+        title: item.querySelector(".font-medium")?.textContent?.trim(),
         audioUrl: item.dataset.audio,
         thumbnails: [item.querySelector("img")?.src],
       }));
@@ -170,5 +171,20 @@ document.addEventListener("songchange", (e) => {
   if (!e.detail) return;
 
   const { index, isPlaying } = e.detail;
+
+  // highlight list
   highlightPlayingSong(index, isPlaying);
+
+  // update LEFT
+  const track = currentTracks[index];
+  if (!track) return;
+
+  const thumb = document.getElementById("songDetailThumb");
+  const title = document.getElementById("songDetailTitle");
+  const duration = document.getElementById("songDetailDuration");
+
+  if (thumb) thumb.src = track.thumbnails?.[0] || "";
+  if (title) title.textContent = track.title;
+  if (duration)
+    duration.textContent = `Thời lượng: ${formatDuration(track.duration)}`;
 });

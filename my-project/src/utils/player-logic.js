@@ -72,10 +72,6 @@ export const playSong = async ({
       },
     })
   );
-
-  document.addEventListener("songchange", (e) => {
-    highlightPlayingSong(e.detail.index);
-  });
 };
 
 // pause

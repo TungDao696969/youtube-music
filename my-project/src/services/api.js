@@ -239,21 +239,23 @@ export const apiChangePassword = async (data) => {
 
 // api login
 export const apiLogOut = async () => {
-  const token = getAccessToken();
-  const res = await fetch(`${BASE_URL}/auth/logout`, {
-    method: "DELETE",
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
+  try {
+    const res = await fetchAuth(`${BASE_URL}/auth/logout`, {
+      method: "DELETE",
+    });
 
-  const data = await res.json();
-  clearAuth();
-  if (!res.ok) {
-    throw new Error("Logout failed");
+    if (!res.ok) {
+      throw new Error("Logout failed");
+    }
+
+    const data = await res.json();
+    clearAuth();
+    return data;
+  } catch (err) {
+    console.error("Logout error", err);
+    clearAuth(); // fallback → vẫn logout local
+    throw err;
   }
-
-  return data;
 };
 
 // api quick pick
@@ -280,6 +282,9 @@ export const logPlayEvent = async ({
   playlistId,
   playedAt,
 } = {}) => {
+  const token = localStorage.getItem("access_token");
+  if (!token) return;
+
   if (!songId && !albumId && !playlistId) {
     throw new Error("Thiếu songId, albumId hoặc playlistId");
   }
@@ -294,7 +299,9 @@ export const logPlayEvent = async ({
   try {
     const res = await fetchAuth(`${BASE_URL}/events/play`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+      },
       body: JSON.stringify(payload),
     });
 
@@ -339,27 +346,60 @@ export const getListCountry = async ({
 export const getAlbumsDetails = async (slug) => {
   const res = await fetch(`${BASE_URL}/albums/details/${slug}`);
   if (!res.ok) {
-    throw new Error ("Không thể lấy albums details");
+    throw new Error("Không thể lấy albums details");
   }
 
   return res.json();
-}
+};
 
-// api play list details 
+// api play list details
 export const getPlayListDetail = async (slug) => {
   const res = await fetch(`${BASE_URL}/playlists/details/${slug}`);
   if (!res.ok) {
-    throw new Error ("Không lấy được danh sách play list");
+    throw new Error("Không lấy được danh sách play list");
   }
 
   return res.json();
-}
+};
 
 // api song details
 export const getSongDetail = async (id) => {
   const res = await fetch(`${BASE_URL}/songs/details/${id}`);
   if (!res.ok) {
-    throw new Error ("Không lấy dc song detail");
+    throw new Error("Không lấy dc song detail");
+  }
+
+  return res.json();
+};
+
+
+//////// Explore
+
+export const getNewAlbums = async () => {
+  const res = await fetch(`${BASE_URL}/explore/albums`);
+
+  if (!res.ok) {
+    throw new Error ("Lỗi không tải dc danh sách");
+  }
+
+  return res.json();
+}
+
+// list mood 
+export const getListMood = async () => {
+  const res = await fetch(`${BASE_URL}/explore/meta`);
+  if (!res.ok) {
+    throw new Error ("Lỗi không lấy được danh sách mood")
+  }
+
+  return res.json();
+}
+
+// list video
+export const getListVideo = async () => {
+  const res = await fetch(`${BASE_URL}/explore/videos`);
+  if (!res.ok) {
+    throw new Error ("Lỗi list video")
   }
 
   return res.json();

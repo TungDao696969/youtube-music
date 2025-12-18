@@ -7,7 +7,7 @@ import {
   headerAvatar,
   initQickPick,
   initPersonalized,
-  initListCountry
+  initListCountry,
 } from "../utils/home-logic.js";
 import Auth from "../views/auth.js";
 import moodSlug from "../views/mood-slug.js";
@@ -25,6 +25,11 @@ import playListDetail from "../views/playlist-detail.js";
 import { initPlayListDetails } from "../utils/playList-details.js";
 import songetails from "../views/song-details.js";
 import { initSongDetails } from "../utils/songs-details.js";
+
+// Explore
+import explore from "../views/explore/explore.js";
+import { initNewAlbums, initListMood, initListVideo } from "../utils/explore/explore-logic.js";
+
 const router = new Navigo("/");
 
 export function navigate(path) {
@@ -55,7 +60,6 @@ export default function initRouter() {
       render(meDetail());
       headerAvatar();
       initMeDetail();
-      
     })
     .on("auth/change-password", () => {
       render(changePassword());
@@ -80,12 +84,12 @@ export default function initRouter() {
       initSlider("albumsForYou", "albumPrev", "albumNext");
       initSlider("albumsTodayHit", "todayPrev", "todayNext");
     })
-    .on ("albums/details/:slug", (match) => {
+    .on("albums/details/:slug", (match) => {
       const slug = match.data.slug;
       render(albumDetail(slug));
       initAlbumsDetails(slug);
     })
-    .on ("playlists/details/:slug", (match) => {
+    .on("playlists/details/:slug", (match) => {
       const slug = match.data.slug;
       render(playListDetail(slug));
       initPlayListDetails(slug);
@@ -94,6 +98,15 @@ export default function initRouter() {
       const id = match.data.id;
       render(songetails(id));
       initSongDetails(id);
+    })
+    .on("explore", () => {
+      render(explore());
+      initNewAlbums();
+      initListMood();
+      initListVideo();
+      initSlider("albumsNew", "albumPrev", "albumNext");
+      initSlider("moodList", "todayPrev", "todayNext");
+      initSlider("videoNew", "videoPrev", "videoNext");
     })
     .resolve();
 }

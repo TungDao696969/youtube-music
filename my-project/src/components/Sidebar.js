@@ -7,7 +7,7 @@ export default function Sidebar() {
                 <span class="text-[11px] text-gray-300 group-hover:text-white">Home</span>
             </a>
 
-            <a href="" class="flex flex-col items-center justify-center gap-1 p-3 hover:bg-white/10 rounded-xl transition group sidebar-active">
+            <a href="/explore" class="flex flex-col items-center justify-center gap-1 p-3 hover:bg-white/10 rounded-xl transition group sidebar-active">
                 <i class="fa-regular fa-compass text-white text-xl"></i>
                 <span class="text-[11px] text-gray-300 group-hover:text-white">Explore</span>
             </a>

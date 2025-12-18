@@ -164,6 +164,7 @@ export const initQickPick = async () => {
   }
 };
 
+// lịch sử nghe
 export const initPersonalized = async () => {
   const container = document.querySelector("#personalizedList");
   if (!container) return;
@@ -212,7 +213,12 @@ export const initPersonalized = async () => {
         albumId: type === "album" ? id : undefined,
         playlistId: type === "playlist" ? id : undefined,
       };
-      
+
+      try {
+        await logPlayEvent(payload);
+      } catch (err) {
+        console.warn("Không lưu được lịch sử nghe", err);
+      }
     });
   } catch (error) {
     console.log(error);
