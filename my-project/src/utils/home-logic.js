@@ -212,12 +212,7 @@ export const initPersonalized = async () => {
         albumId: type === "album" ? id : undefined,
         playlistId: type === "playlist" ? id : undefined,
       };
-
-      try {
-        await logPlayEvent(payload);
-      } catch (err) {
-        console.error(err);
-      }
+      
     });
   } catch (error) {
     console.log(error);

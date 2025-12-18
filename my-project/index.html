@@ -50,26 +50,26 @@
       <div class="h-[72px] px-4 flex items-center justify-between w-full">
         <div class="flex items-center gap-6 min-w-[250px]">
           <div class="flex items-center gap-5 text-white/90">
-            <button class="hover:text-white transition">
-              <i class="fa-solid fa-backward-step text-xl"></i>
+            <button id="prevSong" class="hover:text-white transition">
+              <i class="fa-solid fa-backward-step text-xl cursor-pointer"></i>
             </button>
 
             <button
               id="playerPlayBtn"
               class="hover:scale-110 transition text-white"
             >
-              <i class="fa-solid fa-play text-3xl"></i>
+              <i class="fa-solid fa-play text-3xl cursor-pointer"></i>
             </button>
 
-            <button class="hover:text-white transition">
-              <i class="fa-solid fa-forward-step text-xl"></i>
+            <button id="nextSong" class="hover:text-white transition">
+              <i class="fa-solid fa-forward-step text-xl cursor-pointer"></i>
             </button>
           </div>
 
           <span class="text-xs text-[#aaaaaa] font-medium tracking-wide">
-            <span id="currentTime">0:01</span>
+            <span id="currentTime"></span>
             <span class="mx-1">/</span>
-            <span id="totalTime">5:53</span>
+            <span id="totalTime"></span>
           </span>
         </div>
 
@@ -87,7 +87,7 @@
                 id="playerTitle"
                 class="text-sm font-bold text-white truncate max-w-[200px] leading-tight"
               >
-                Nhạc Acoustic Album 16 - Bài 2
+                
               </p>
               <p
                 id="playerArtist"

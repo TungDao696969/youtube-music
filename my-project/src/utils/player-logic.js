@@ -1,3 +1,4 @@
+import { logPlayEvent } from "../services/api";
 const audio = document.getElementById("playerAudio");
 const player = document.getElementById("musicPlayer");
 
@@ -13,9 +14,21 @@ const volume = document.getElementById("playerVolume");
 
 const progressBar = document.getElementById("playerProgressBar");
 const progressDot = document.getElementById("playerProgressDot");
-let isPlaying = false;
 
-export const playSong = ({
+const btnPrev = document.getElementById("prevSong");
+const btnNext = document.getElementById("nextSong");
+
+let isPlaying = false;
+let playQueue = [];
+let currentIndex = -1;
+
+export const setPlayQueue = (queue, index = 0) => {
+  playQueue = queue;
+  currentIndex = index;
+};
+
+export const playSong = async ({
+  id,
   title,
   artist = "Không rõ nghệ sĩ",
   audioUrl,
@@ -42,6 +55,27 @@ export const playSong = ({
     "invisible",
     "pointer-events-none"
   );
+
+  if (id) {
+    try {
+      await logPlayEvent({ songId: id });
+    } catch (err) {
+      console.warn("Không lưu được lịch sử nghe", err);
+    }
+  }
+
+  document.dispatchEvent(
+    new CustomEvent("songchange", {
+      detail: {
+        index: currentIndex,
+        isPlaying,
+      },
+    })
+  );
+
+  document.addEventListener("songchange", (e) => {
+    highlightPlayingSong(e.detail.index);
+  });
 };
 
 // pause
@@ -57,6 +91,30 @@ playBtn.addEventListener("click", () => {
   }
 
   updatePlayIcon();
+});
+
+// next song
+btnNext.addEventListener("click", () => {
+  if (!playQueue.length) return;
+
+  currentIndex++;
+  if (currentIndex >= playQueue.length) {
+    currentIndex = 0;
+  }
+
+  playSong(playQueue[currentIndex]);
+});
+
+// prev song
+btnPrev.addEventListener("click", () => {
+  if (!playQueue.length) return;
+
+  currentIndex--;
+  if (currentIndex < 0) {
+    currentIndex = playQueue.length - 1;
+  }
+
+  playSong(playQueue[currentIndex]);
 });
 
 const updatePlayIcon = () => {
@@ -81,6 +139,19 @@ audio.addEventListener("timeupdate", () => {
   currentTimeEl.textContent = formatTime(audio.currentTime);
 });
 
+// hết bài tự next bài tiếp theo
+audio.addEventListener("ended", () => {
+  if (!playQueue.length) return;
+
+  currentIndex++;
+
+  if (currentIndex >= playQueue.length) {
+    currentIndex = 0;
+  }
+
+  playSong(playQueue[currentIndex]);
+});
+
 progress.addEventListener("input", () => {
   if (!audio.duration) return;
 
@@ -90,6 +161,8 @@ progress.addEventListener("input", () => {
 volume.addEventListener("input", () => {
   audio.volume = volume.value;
 });
+
+export const getCurrentIndex = () => currentIndex;
 
 const formatTime = (sec) => {
   const m = Math.floor(sec / 60);

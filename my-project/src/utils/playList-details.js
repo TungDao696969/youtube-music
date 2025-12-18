@@ -1,5 +1,5 @@
 import { getPlayListDetail } from "../services/api";
-
+import { navigate } from "../routers/router";
 export const initPlayListDetails = async (slug) => {
   const container = document.getElementById("playListDetails");
 
@@ -46,7 +46,7 @@ export const initPlayListDetails = async (slug) => {
                     <div
                         class="group flex items-center gap-4 px-4 py-3 rounded-lg
                             hover:bg-white/5 cursor-pointer transition"
-                        data-song-id="${track.id}"
+                        data-id="${track.id}"
                         data-audio="${track.audioUrl}"
                     >
                         <span class="w-6 text-neutral-400 text-sm">
@@ -92,6 +92,13 @@ export const initPlayListDetails = async (slug) => {
             </section>
         </div>
         `;
+
+    container.addEventListener("click", (e) => {
+      const card = e.target.closest("[data-id]");
+      if (!card) return;
+
+      navigate(`/songs/details/${card.dataset.id}`);
+    });
   } catch (error) {
     console.error(error);
     container.innerHTML = `
@@ -103,12 +110,12 @@ export const initPlayListDetails = async (slug) => {
 };
 
 const formatDuration = (seconds) => {
-    const m = Math.floor(seconds / 60);
-    const s = seconds % 60;
-    return `${m}:${s.toString().padStart(2, "0")}`;
-}
+  const m = Math.floor(seconds / 60);
+  const s = seconds % 60;
+  return `${m}:${s.toString().padStart(2, "0")}`;
+};
 const formatTotalDuration = (seconds) => {
-    const h = Math.floor(seconds / 3600);
-    const m = Math.floor((seconds % 3600) / 60);
-    return `${h} giờ ${m} phút`;
-}
+  const h = Math.floor(seconds / 3600);
+  const m = Math.floor((seconds % 3600) / 60);
+  return `${h} giờ ${m} phút`;
+};

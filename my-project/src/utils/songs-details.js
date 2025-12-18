@@ -1,5 +1,5 @@
 import { getSongDetail } from "../services/api";
-import { playSong } from "./player-logic";
+import { playSong, setPlayQueue, getCurrentIndex } from "./player-logic";
 export const initSongDetails = async (id) => {
   const container = document.getElementById("songDetails");
   container.innerHTML = `
@@ -43,7 +43,7 @@ export const initSongDetails = async (id) => {
                 .map(
                   (track, index) => `
                   <div
-                    class="group flex items-center gap-4 px-4 py-3 rounded-lg
+                    class="song-row group flex items-center gap-4 px-4 py-3 rounded-lg
                            hover:bg-white/5 cursor-pointer transition"
                     data-song-id="${track.id}"
                     data-audio="${track.audioUrl}"
@@ -52,26 +52,27 @@ export const initSongDetails = async (id) => {
                       ${index + 1}
                     </span>
 
-                   <div class="relative">
-                            <img
-                            src="${track.thumbnails?.[0]}"
-                            class="w-10 h-10 rounded"
-                            />
-                             <!-- OVERLAY -->
+                   <div class="relative song-thumb">
+                      <img
+                        src="${track.thumbnails?.[0]}"
+                        class="w-10 h-10 rounded"
+                      />
+
+                      <!-- OVERLAY -->
+                      <div
+                        class="song-overlay absolute inset-0 bg-black/40
+                              opacity-0 group-hover:opacity-100
+                              transition flex items-center justify-center"
+                      >
+                        <!-- ICON -->
                         <div
-                            class="absolute inset-0 bg-black/40
-                                opacity-0 group-hover:opacity-100
-                                transition flex items-center justify-center"
-                                >
-                            <!-- PLAY ICON -->
-                            <div
-                                class="w-12 h-12 rounded-full
+                          class="song-icon w-12 h-12 rounded-full
                                 flex items-center justify-center
                                 shadow-lg"
-                            >
-                            <i class="fa-solid fa-play text-xl"></i>
-                            </div>
+                        >
+                          <i class="fa-solid fa-play text-xl"></i>
                         </div>
+                      </div>
                     </div>
 
                     <div class="flex-1">
@@ -99,14 +100,21 @@ export const initSongDetails = async (id) => {
       if (!row) return;
 
       const title = row.querySelector(".font-medium")?.textContent?.trim();
+      const rows = [...container.querySelectorAll("[data-song-id]")];
 
-      playSong({
+      const queue = rows.map((item) => ({
+        id: item.dataset.songId,
         title,
-        audioUrl: row.dataset.audio,
-        thumbnails: [row.querySelector("img")?.src],
-      });
-    });
+        audioUrl: item.dataset.audio,
+        thumbnails: [item.querySelector("img")?.src],
+      }));
 
+      const index = rows.indexOf(row);
+
+      setPlayQueue(queue, index);
+      playSong(queue[index]);
+      highlightPlayingSong(index, true);
+    });
   } catch (error) {
     console.error(error);
     container.innerHTML = `
@@ -127,3 +135,40 @@ const formatTotalDuration = (seconds) => {
   const m = Math.floor((seconds % 3600) / 60);
   return `${h} giờ ${m} phút`;
 };
+
+const highlightPlayingSong = (index, isPlaying = true) => {
+  const rows = document.querySelectorAll(".song-row");
+
+  rows.forEach((row, i) => {
+    const overlay = row.querySelector(".song-overlay");
+    const icon = row.querySelector(".song-icon i");
+
+    if (!overlay || !icon) return;
+
+    if (i === index) {
+      row.classList.add("bg-white/10");
+
+      // luôn hiện overlay
+      overlay.classList.remove("opacity-0");
+
+      // đổi icon
+      icon.className = isPlaying
+        ? "fa-solid fa-volume-high text-white text-xl"
+        : "fa-solid fa-pause text-xl";
+    } else {
+      row.classList.remove("bg-white/10");
+
+      // chỉ hiện khi hover
+      overlay.classList.add("opacity-0");
+
+      icon.className = "fa-solid fa-play text-xl";
+    }
+  });
+};
+
+document.addEventListener("songchange", (e) => {
+  if (!e.detail) return;
+
+  const { index, isPlaying } = e.detail;
+  highlightPlayingSong(index, isPlaying);
+});
