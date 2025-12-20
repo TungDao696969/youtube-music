@@ -2,6 +2,7 @@ import { getNewAlbums, getListMood, getListVideo } from "../../services/api";
 import newAlbumCard from "../../components/explore/newAlbumCard";
 import { MoodCard } from "../../components/explore/listMoodCard";
 import VideoCard from "../../components/explore/videoCard";
+import { navigate } from "../../routers/router";
 export const initNewAlbums = async () => {
   const container = document.getElementById("albumsNew");
   try {
@@ -39,7 +40,7 @@ export const initListMood = async () => {
       const card = e.target.closest("[data-slug]");
       if (!card) return;
 
-      navigate(`/albums/details/${card.dataset.slug}`);
+      navigate(`/explore/categories/${card.dataset.slug}`);
     });
   } catch (error) {
     console.error(error);
@@ -60,10 +61,10 @@ export const initListVideo = async () => {
     const listVideo = Array.isArray(res.items) ? res.items : [];
     container.innerHTML = listVideo.map(VideoCard).join("");
     container.addEventListener("click", (e) => {
-      const card = e.target.closest("[data-slug]");
+      const card = e.target.closest("[data-id]");
       if (!card) return;
 
-      navigate(`/albums/details/${card.dataset.slug}`);
+      navigate(`/videos/details/${card.dataset.id}`);
     });
   } catch (error) {
     console.error(error);

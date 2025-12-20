@@ -10,7 +10,7 @@ export default function explore() {
                     <div class="app-container px-6">
                        <div class="flex justify-between gap-6">
                         <!-- Bản phát hành mới -->
-                        <button
+                        <a href="/explore/new-releases"
                             class="flex items-center  gap-3
                                 px-6 py-4 w-[400px]
                                 rounded-2xl
@@ -26,10 +26,10 @@ export default function explore() {
                             <i class="fa-solid fa-compact-disc"></i>
                             </span>
                             <span class="text-lg">Bản phát hành mới</span>
-                        </button>
+                        </a>
 
                         <!-- Bảng xếp hạng -->
-                        <button
+                        <a href="/explore/charts"
                             class="flex items-center gap-3
                                 px-6 py-4 w-[400px]
                                 rounded-2xl
@@ -45,10 +45,10 @@ export default function explore() {
                             <i class="fa-solid fa-chart-simple"></i>
                             </span>
                             <span class="text-lg">Bảng xếp hạng</span>
-                        </button>
+                        </a>
 
                         <!-- Tâm trạng & thể loại -->
-                        <button
+                        <a href="/explore/mood-and-genres"
                             class="flex items-center gap-3
                                 px-6 py-4 w-[400px]
                                 rounded-2xl
@@ -64,7 +64,7 @@ export default function explore() {
                             <i class="fa-regular fa-face-smile"></i>
                             </span>
                             <span class="text-lg">Tâm trạng và thể loại</span>
-                        </button>
+                        </a>
                         </div>
 
                         <!--new albums-->

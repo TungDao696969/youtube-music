@@ -11,7 +11,7 @@ export const initSongDetails = async (id) => {
   try {
     const song = await getSongDetail(id);
 
-    // ✅ tracks nằm trong album.tracks
+    // tracks nằm trong album.tracks
     const tracks = Array.isArray(song.album?.tracks) ? song.album.tracks : [];
     currentTracks = tracks;
     container.innerHTML = `
@@ -96,6 +96,30 @@ export const initSongDetails = async (id) => {
         </section>
       </div>
     `;
+
+    const autoPlayId = sessionStorage.getItem("autoplaySong");
+
+    if (autoPlayId) {
+      const queue = tracks.map((track) => ({
+        id: track.id,
+        title: track.title,
+        audioUrl: track.audioUrl,
+        thumbnails: track.thumbnails,
+      }));
+
+      const index = tracks.findIndex(
+        (t) => String(t.id) === String(autoPlayId)
+      );
+
+      if (index !== -1) {
+        setPlayQueue(queue, index);
+        playSong(queue[index]);
+        highlightPlayingSong(index, true);
+      }
+
+      // clear để tránh auto play lại
+      sessionStorage.removeItem("autoplaySong");
+    }
 
     container.addEventListener("click", async (e) => {
       const row = e.target.closest("[data-song-id]");

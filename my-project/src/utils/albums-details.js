@@ -28,8 +28,8 @@ export const initAlbumsDetails = async (slug) => {
 
                 <p class="text-neutral-400 text-sm mb-2">
                     ${albumDetail.songCount} bài hát • ${formatTotalDuration(
-                    albumDetail.duration
-                    )}
+      albumDetail.duration
+    )}
                 </p>
 
                 <p class="text-neutral-400 text-sm">
@@ -105,7 +105,7 @@ export const initAlbumsDetails = async (slug) => {
     container.addEventListener("click", (e) => {
       const card = e.target.closest("[data-id]");
       if (!card) return;
-
+      sessionStorage.setItem("autoplaySong", card.dataset.id);
       navigate(`/songs/details/${card.dataset.id}`);
     });
   } catch (error) {

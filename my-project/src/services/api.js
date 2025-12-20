@@ -372,35 +372,160 @@ export const getSongDetail = async (id) => {
   return res.json();
 };
 
-
 //////// Explore
 
 export const getNewAlbums = async () => {
   const res = await fetch(`${BASE_URL}/explore/albums`);
 
   if (!res.ok) {
-    throw new Error ("Lỗi không tải dc danh sách");
+    throw new Error("Lỗi không tải dc danh sách");
   }
 
   return res.json();
-}
+};
 
-// list mood 
+// list mood
 export const getListMood = async () => {
   const res = await fetch(`${BASE_URL}/explore/meta`);
   if (!res.ok) {
-    throw new Error ("Lỗi không lấy được danh sách mood")
+    throw new Error("Lỗi không lấy được danh sách mood");
   }
 
   return res.json();
-}
+};
 
 // list video
 export const getListVideo = async () => {
   const res = await fetch(`${BASE_URL}/explore/videos`);
   if (!res.ok) {
-    throw new Error ("Lỗi list video")
+    throw new Error("Lỗi list video");
   }
 
   return res.json();
-}
+};
+
+// bản phát hành mới
+export const getNewReleases = async () => {
+  const res = await fetch(`${BASE_URL}/explore/new-releases`);
+  if (!res.ok) {
+    throw new Error("Lỗi không lấy được bane phát hành mới");
+  }
+
+  return res.json();
+};
+
+// Danh sách quốc gia
+export const getChartCountry = async () => {
+  const res = await fetch(`${BASE_URL}/charts/countries`);
+  if (!res.ok) {
+    throw new Error("Không lấy được api");
+  }
+
+  return res.json();
+};
+
+// bảng xếp hạng video
+export const getChartVideo = async ({ country = "GLOBAL" }) => {
+  const res = await fetch(`${BASE_URL}/charts/videos?country=${country}`);
+
+  if (!res.ok) {
+    throw new Error("Lỗi không lấy được video");
+  }
+
+  return res.json();
+};
+
+// bảng xếp hạng nghệ sĩ
+export const getChartArtist = async ({ country = "GLOBAL" }) => {
+  const res = await fetch(`${BASE_URL}/charts/top-artists?country=${country}`);
+
+  if (!res.ok) {
+    throw new Error("Lỗi không lấy được video");
+  }
+
+  return res.json();
+};
+
+// api tâm trạng thể loại
+export const getMoodGenres = async () => {
+  const res = await fetch(`${BASE_URL}/categories`);
+  if (!res.ok) {
+    throw new Error("Lỗi không lấy được danh sách");
+  }
+
+  return res.json();
+};
+
+// api lines
+export const getListLines = async () => {
+  const res = await fetch(`${BASE_URL}/lines`);
+  if (!res.ok) {
+    throw new Error("Lỗi không lấy được danh sách");
+  }
+
+  return res.json();
+};
+
+// api categories/slug
+export const getCategoriesSlug = async (slug) => {
+  const res = await fetch(`${BASE_URL}/categories/${slug}`);
+  if (!res.ok) {
+    throw new Error("Không lấy được danh sách play categories");
+  }
+
+  return res.json();
+};
+
+// api line/slug
+export const getLinesSlug = async (slug) => {
+  const res = await fetch(`${BASE_URL}/lines/${slug}/songs`);
+  if (!res.ok) {
+    throw new Error("Không lấy được danh sách play categories");
+  }
+
+  return res.json();
+};
+
+// api playlist nổi bâth
+export const getLinePlaylist = async (slug) => {
+  const res = await fetch(`${BASE_URL}/lines/${slug}/playlists`);
+
+  if (!res.ok) {
+    throw new Error("Không lấy được danh sách play categories");
+  }
+
+  return res.json();
+};
+
+// api album nổi bâth
+export const getLineAlbum = async (slug) => {
+  const res = await fetch(`${BASE_URL}/lines/${slug}/albums`);
+
+  if (!res.ok) {
+    throw new Error("Không lấy được danh sách play categories");
+  }
+
+  return res.json();
+};
+
+// api video nổi bâth
+export const getLineVideo = async (slug) => {
+  const res = await fetch(`${BASE_URL}/lines/${slug}/videos`);
+
+  if (!res.ok) {
+    throw new Error("Không lấy được danh sách play categories");
+  }
+
+  return res.json();
+};
+
+// api video details
+export const getVideoDetail = async (id) => {
+  const res = await fetch(`${BASE_URL}/videos/details/${id}`);
+
+  if (!res.ok) {
+    throw new Error("Không lấy được dánh sách video");
+  }
+
+  return res.json();
+};

@@ -28,8 +28,29 @@ import { initSongDetails } from "../utils/songs-details.js";
 
 // Explore
 import explore from "../views/explore/explore.js";
-import { initNewAlbums, initListMood, initListVideo } from "../utils/explore/explore-logic.js";
+import {
+  initNewAlbums,
+  initListMood,
+  initListVideo,
+} from "../utils/explore/explore-logic.js";
+import newReleases from "../views/explore/new-releases.js";
+import { initNewReleases } from "../utils/explore/newReleases-logic.js";
+import charts from "../views/explore/charts.js";
+import {
+  initChartCountry,
+  initChartVideos,
+  initChartArtist
+} from "../utils/explore/charts-logic.js";
 
+import moodGenres from "../views/explore/mood-and-genres.js";
+import { initMoodGenres, initListLines } from "../utils/explore/mood-and-genres.js";
+import categoriesMood from "../views/explore/categories-slug.js";
+import { initCategoriesSlug } from "../utils/explore/categories-slug.js";
+
+import linesSlug from "../views/explore/lines-slug.js";
+import { initLineSlug, initLinePlaylist, initLineAlbum, initLineVideo } from "../utils/explore/lines-slug.js";
+import videoDetail from "../views/explore/video-detail.js";
+import { initVideoDetails } from "../utils/explore/video-details.js";
 const router = new Navigo("/");
 
 export function navigate(path) {
@@ -107,6 +128,50 @@ export default function initRouter() {
       initSlider("albumsNew", "albumPrev", "albumNext");
       initSlider("moodList", "todayPrev", "todayNext");
       initSlider("videoNew", "videoPrev", "videoNext");
+    })
+    .on("explore/new-releases", () => {
+      render(newReleases());
+      initNewReleases();
+      initListVideo();
+    })
+    .on("explore/charts", () => {
+      render(charts());
+      let countryCode = null;
+
+      initChartCountry((code) => {
+        countryCode = code;
+        initChartVideos({
+          country: code,
+        });
+        initChartArtist({
+          country: code,
+        })
+      });
+    })
+    .on("explore/mood-and-genres", () => {
+      render(moodGenres());
+      initMoodGenres();
+      initListLines();
+      initSlider("moodGenresList", "moodPrev", "moodNext");
+      initSlider("moodLines", "linePrev", "lineNext");
+    })
+     .on("explore/categories/:slug", (match) => {
+      const slug = match.data.slug;
+      render(categoriesMood(slug));
+      initCategoriesSlug(slug);
+    })
+     .on("explore/lines/:slug", (match) => {
+      const slug = match.data.slug;
+      render(linesSlug(slug));
+      initLineSlug(slug);
+      initLinePlaylist(slug);
+      initLineAlbum(slug);
+      initLineVideo(slug);
+    })
+    .on("videos/details/:id", (match) => {
+      const id = match.data.id;
+      render(videoDetail(id));
+      initVideoDetails(id);
     })
     .resolve();
 }

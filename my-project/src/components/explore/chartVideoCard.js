@@ -1,8 +1,8 @@
-export default function VideoCard(video) {
+export default function chartVideoCard(video) {
   return `
     <div
       class="group cursor-pointer w-[260px] flex-shrink-0"
-      data-id="${video.id}"
+      data-slug="${video.slug}"
       data-video-id="${video.videoId}"
     >
       <!-- THUMB -->
@@ -32,7 +32,7 @@ export default function VideoCard(video) {
 
       <!-- TITLE -->
       <h3 class="mt-2 font-semibold line-clamp-2">
-        ${video.name}
+        ${video.title}
       </h3>
 
       <!-- VIEWS -->
