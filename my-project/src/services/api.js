@@ -529,3 +529,26 @@ export const getVideoDetail = async (id) => {
 
   return res.json();
 };
+
+// api search
+export const searchSuggestions = async (q) => {
+  const res = await fetch(
+    `${BASE_URL}/search/suggestions?q=${encodeURIComponent(q)}`
+  );
+
+  if (!res.ok) {
+    throw new Error("Suggestion API error");
+  }
+
+  return res.json();
+};
+
+export const searchResult = async ({ q, limit = 20, page = 1 }) => {
+  const res = await fetch(
+    `${BASE_URL}/search?q=${encodeURIComponent(q)}&limit=${limit}&page=${page}`
+  );
+
+  if (!res.ok) throw new Error("Search API error");
+
+  return res.json();
+};

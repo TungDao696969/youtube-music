@@ -51,6 +51,7 @@ import linesSlug from "../views/explore/lines-slug.js";
 import { initLineSlug, initLinePlaylist, initLineAlbum, initLineVideo } from "../utils/explore/lines-slug.js";
 import videoDetail from "../views/explore/video-detail.js";
 import { initVideoDetails } from "../utils/explore/video-details.js";
+
 const router = new Navigo("/");
 
 export function navigate(path) {

@@ -21,13 +21,29 @@ export default function Header() {
           <i
             class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-white"
           ></i>
-
+          
+          <div class="relative w-full max-w-2xl">
           <input
             id="searchInput"
             type="text"
             placeholder="Search..."
             class="bg-[#292929]/90 pl-10 pr-3 py-2 rounded-lg w-[500px] focus:outline-none text-white"
           />
+          <div
+            id="searchDropdown"
+            class="absolute left-0 right-0 mt-2 bg-neutral-900 rounded-xl shadow-xl hidden z-50"
+          >
+            <!-- GỢI Ý -->
+            <div class="px-4 py-2 text-sm text-neutral-400">Gợi ý</div>
+            <ul id="suggestionList"></ul>
+
+            <div class="border-t border-white/10 my-2"></div>
+
+            <!-- KẾT QUẢ -->
+            <div class="px-4 py-2 text-sm text-neutral-400">Kết quả</div>
+            <ul id="resultList"></ul>
+          </div>
+          </div>
         </div>
 
         <div class="flex items-center gap-5">
