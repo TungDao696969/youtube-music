@@ -1,6 +1,6 @@
 export default function lineSlugCard(item) {
   return `
-        <div class="quick-pick-item group cursor-pointer w-[300px] p-3 rounded-lg flex gap-2 hover:bg-white/5 transition" data-slug="${item.slug}">
+        <div class="quick-pick-item group cursor-pointer w-[300px] p-3 rounded-lg flex gap-2 hover:bg-white/5 transition" data-id="${item.id}">
             <div class ="relative">
             <img src="${item.thumb}" alt="${item.name}" class="w-14 h-14 rounded object-cover flex-shrink-0" />
              <!-- OVERLAY -->

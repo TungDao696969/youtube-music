@@ -37,7 +37,7 @@ export default function newAlbumCard(album) {
 
       <!-- TYPE -->
       <p class="text-sm text-neutral-400">
-        ${album.albumType}
+        ${album.albumType || album.artists}
       </p>
     </div>
   `;

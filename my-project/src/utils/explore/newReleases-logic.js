@@ -1,5 +1,6 @@
 import { getNewReleases } from "../../services/api";
 import newReleasesCard from "../../components/explore/newReleases";
+import { navigate } from "../../routers/router";
 export const initNewReleases = async () => {
   const container = document.getElementById("newReleases");
   if (!container) {

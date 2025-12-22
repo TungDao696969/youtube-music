@@ -1,6 +1,11 @@
-import { getChartCountry, getChartVideo, getChartArtist } from "../../services/api";
+import {
+  getChartCountry,
+  getChartVideo,
+  getChartArtist,
+} from "../../services/api";
 import chartVideoCard from "../../components/explore/chartVideoCard";
 import chartArtistCard from "../../components/explore/chartArtistCard";
+import { navigate } from "../../routers/router";
 export const initChartCountry = async (onChange) => {
   const selectBtn = document.getElementById("selectBtn");
   const selectMenu = document.getElementById("selectMenu");
@@ -91,6 +96,13 @@ export const initChartVideos = async (options) => {
     const videos = Array.isArray(res.items) ? res.items : [];
 
     container.innerHTML = videos.map(chartVideoCard).join("");
+
+    container.addEventListener("click", (e) => {
+      const card = e.target.closest(".video-card");
+      if (!card) return;
+      console.log("video id:", card.dataset.id);
+      navigate(`/videos/details/${card.dataset.id}`);
+    });
   } catch (error) {
     console.error(error);
     container.innerHTML = `
@@ -115,5 +127,3 @@ export const initChartArtist = async (options) => {
     `;
   }
 };
-
-

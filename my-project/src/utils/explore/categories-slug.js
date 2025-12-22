@@ -1,5 +1,6 @@
 import { getCategoriesSlug } from "../../services/api";
 import { CategoriesSlugCard } from "../../components/explore/categoriesSlugCard";
+import { navigate } from "../../routers/router";
 export const initCategoriesSlug = async (slug) => {
   const wrapper = document.getElementById("categoriesWrapper");
   if (!wrapper) return;
@@ -30,5 +31,11 @@ export const initCategoriesSlug = async (slug) => {
         </div>
       </section>
     `;
+
+    wrapper.addEventListener("click", (e) => {
+      const card = e.target.closest("[data-slug]");
+      if (!card) return;
+      navigate(`/playlists/details/${card.dataset.slug}`);
+    })
   });
 };

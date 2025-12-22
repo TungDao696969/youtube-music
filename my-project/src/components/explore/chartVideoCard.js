@@ -1,9 +1,10 @@
 export default function chartVideoCard(video) {
   return `
     <div
-      class="group cursor-pointer w-[260px] flex-shrink-0"
+      class="video-card group cursor-pointer w-[260px] flex-shrink-0"
       data-slug="${video.slug}"
-      data-video-id="${video.videoId}"
+      data-id="${video._id}"
+      data-videoid="${video.videoId}"
     >
       <!-- THUMB -->
       <div class="relative aspect-video rounded-lg overflow-hidden bg-neutral-800">

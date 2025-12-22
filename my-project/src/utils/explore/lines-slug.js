@@ -1,7 +1,13 @@
-import { getLinesSlug, getLinePlaylist, getLineAlbum, getLineVideo} from "../../services/api";
+import {
+  getLinesSlug,
+  getLinePlaylist,
+  getLineAlbum,
+  getLineVideo,
+} from "../../services/api";
 import lineSlugCard from "../../components/explore/lineSlugCard";
 import newAlbumCard from "../../components/explore/newAlbumCard";
 import VideoCard from "../../components/explore/videoCard";
+import { navigate } from "../../routers/router";
 export const initLineSlug = async (slug) => {
   const container = document.getElementById("linesSlug");
   if (!container) return;
@@ -12,10 +18,11 @@ export const initLineSlug = async (slug) => {
     const lines = Array.isArray(res.items) ? res.items : [];
     container.innerHTML = lines.map(lineSlugCard).join("");
     container.addEventListener("click", (e) => {
-      const card = e.target.closest("[data-slug]");
+      const card = e.target.closest("[data-id]");
       if (!card) return;
+      sessionStorage.setItem("autoplaySong", card.dataset.id);
 
-      navigate(`/explore/lines/${card.dataset.slug}`);
+      navigate(`/songs/details/${card.dataset.id}`);
     });
   } catch (error) {
     console.error(error);
@@ -36,11 +43,11 @@ export const initLinePlaylist = async (slug) => {
 
     const lines = Array.isArray(res.items) ? res.items : [];
     container.innerHTML = lines.map(newAlbumCard).join("");
+
     container.addEventListener("click", (e) => {
       const card = e.target.closest("[data-slug]");
       if (!card) return;
-
-      navigate(`/explore/lines/${card.dataset.slug}`);
+      navigate(`/playlists/details/${card.dataset.slug}`);
     });
   } catch (error) {
     console.error(error);
@@ -65,7 +72,7 @@ export const initLineAlbum = async (slug) => {
       const card = e.target.closest("[data-slug]");
       if (!card) return;
 
-      navigate(`/explore/lines/${card.dataset.slug}`);
+      navigate(`/albums/details/${card.dataset.slug}`);
     });
   } catch (error) {
     console.error(error);
@@ -87,10 +94,10 @@ export const initLineVideo = async (slug) => {
     const lines = Array.isArray(res.items) ? res.items : [];
     container.innerHTML = lines.map(VideoCard).join("");
     container.addEventListener("click", (e) => {
-      const card = e.target.closest("[data-slug]");
+      const card = e.target.closest("[data-id]");
       if (!card) return;
 
-      navigate(`/explore/lines/${card.dataset.slug}`);
+      navigate(`/videos/details/${card.dataset.id}`);
     });
   } catch (error) {
     console.error(error);

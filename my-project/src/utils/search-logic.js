@@ -15,8 +15,9 @@ export const initSearch = () => {
   const suggestionsEl = document.getElementById("suggestionList");
   const resultsEl = document.getElementById("resultList");
 
+  if (!input || !resultsEl) return;
   const handleSearch = async (keyword) => {
-    if (keyword.length < 2) {
+    if (keyword.length < 1) {
       dropdown.classList.add("hidden");
       return;
     }
@@ -77,7 +78,7 @@ export const initSearch = () => {
           </p>
           <p class="text-neutral-400 text-xs">
             ${item.genre || ""}
-          </p>
+          </p>  
         </div>
       </li>
     `
@@ -116,7 +117,7 @@ export const initSearch = () => {
     const { id, type } = card.dataset;
 
     if (type === "song") {
-      sessionStorage.setItem("autoplaySong",id);
+      sessionStorage.setItem("autoplaySong", id);
       navigate(`/songs/details/${id}`);
     }
 

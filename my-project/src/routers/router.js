@@ -126,6 +126,7 @@ export default function initRouter() {
       initNewAlbums();
       initListMood();
       initListVideo();
+      headerAvatar();
       initSlider("albumsNew", "albumPrev", "albumNext");
       initSlider("moodList", "todayPrev", "todayNext");
       initSlider("videoNew", "videoPrev", "videoNext");
