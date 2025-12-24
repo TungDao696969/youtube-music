@@ -1,32 +1,47 @@
 import { navigate } from "../routers/router";
 import { apiChangePassword } from "../services/api";
-
+import { showAlert } from "./home-logic";
 export const initChangePassword = async () => {
   const form = document.querySelector("#changePasswordForm");
 
+  if (!form) return;
+
+  const oldInput = document.querySelector("#oldPassword");
+  const newInput = document.querySelector("#newPassword");
+  const confirmInput = document.querySelector("#confirmPassword");
+
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
-    const oldPassword = form.oldPassword.value;
-    const newPassword = form.newPassword.value;
-    const confirmPassword = form.confirmPassword.value;
 
-    if (newPassword.length < 6) {
-      alert("Mật khẩu phải ít nhất 6 ký tự");
+    const oldPassword = oldInput.value.trim();
+    const newPassword = newInput.value.trim();
+    const confirmPassword = confirmInput.value.trim();
+
+    if (!oldPassword || !newPassword || !confirmPassword) {
+      // alert("Vui lòng nhập đầy đủ thông tin");
+      showAlert("Vui lòng nhập đầy đủ thông tin", "error");
       return;
     }
 
     if (newPassword !== confirmPassword) {
-      alert("Mật khẩu nhập lại không khớp");
+      // alert("Mật khẩu xác nhận không khớp");
+      showAlert("Mật khẩu xác nhận không khớp", "error");
       return;
     }
+
     try {
-      const res = await apiChangePassword({ oldPassword, newPassword });
-      alert("Đổi mk thành công vui lòng đăng nhập lại");
-      localStorage.removeItem("access_token");
-      localStorage.removeItem("user");
+      await apiChangePassword({
+        oldPassword,
+        newPassword,
+        confirmPassword,
+      });
+
+      alert("Đổi mật khẩu thành công");
+      // showAlert("Đổi mật khẩu thành công", "success");
       navigate("/auth");
-    } catch (error) {
-      console.log(error);
+      form.reset();
+    } catch (err) {
+      alert(err.message);
     }
   });
 };

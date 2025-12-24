@@ -1,8 +1,9 @@
 import { getMoodSlug } from "../services/api";
 import { navigate } from "../routers/router";
+import AlbumCard from "../components/Home/AlbumCard";
 export const moodSlugDetail = async (slug) => {
   const container = document.querySelector("#mood-slug");
-  
+
   if (!container) return;
 
   container.innerHTML = `<p class="text-neutral-400">Đang tải...</p>`;
@@ -107,6 +108,70 @@ export const moodSlugDetail = async (slug) => {
     console.log(error);
     container.innerHTML = `
         <p class="text-red-500">Không thể tải mood chi tiết</p>
+    `;
+  }
+};
+
+export const featuredForyou = async (slug) => {
+  const container = document.getElementById("featured");
+
+  if (!container) return;
+
+  try {
+    const data = await getMoodSlug(slug);
+    const featuredSection = data.sections?.find(
+      (section) => section.id === "featured"
+    );
+
+    const items = featuredSection?.items || [];
+
+    container.innerHTML = items.map(AlbumCard).join("");
+
+    container.addEventListener("click", (e) => {
+      const card = e.target.closest("[data-slug]");
+      if (!card) return;
+
+      const slug = card.dataset.slug;
+      navigate(`/playlists/details/${slug}`);
+    });
+  } catch (error) {
+    console.log(error);
+    listMoots.innerHTML = `
+      <p class="text-red-500">
+        Không thể tải mood
+      </p>
+    `;
+  }
+};
+
+export const morePicks = async (slug) => {
+  const container = document.getElementById("morepicks");
+
+  if (!container) return;
+
+  try {
+    const data = await getMoodSlug(slug);
+
+     const moreSection = data.sections?.find(
+      (section) => section.id === "more"
+    );
+
+    const items = moreSection?.items || [];
+
+    container.innerHTML = items.map(AlbumCard).join("");
+    container.addEventListener("click", (e) => {
+      const card = e.target.closest("[data-slug]");
+      if (!card) return;
+
+      const slug = card.dataset.slug;
+      navigate(`/playlists/details/${slug}`);
+    });
+  } catch (error) {
+    console.log(error);
+    listMoots.innerHTML = `
+      <p class="text-red-500">
+        Không thể tải mood
+      </p>
     `;
   }
 };

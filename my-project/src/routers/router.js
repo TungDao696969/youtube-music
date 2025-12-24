@@ -8,10 +8,11 @@ import {
   initQickPick,
   initPersonalized,
   initListCountry,
+  showAlert,
 } from "../utils/home-logic.js";
 import Auth from "../views/auth.js";
 import moodSlug from "../views/mood-slug.js";
-import { moodSlugDetail } from "../utils/mood-slug.js";
+import { moodSlugDetail, featuredForyou, morePicks } from "../utils/mood-slug.js";
 import { initAuth, navigateAuth, initRegiter } from "../utils/auth-logic.js";
 import meDetail from "../views/meDetail.js";
 import { initMeDetail } from "../utils/meDetail-logic.js";
@@ -132,9 +133,12 @@ export default function initRouter() {
       initMoots();
       initQickPick();
       moodSlugDetail(slug);
+      featuredForyou(slug);
+      morePicks(slug);
       initSlider("albumsForYou", "albumPrev", "albumNext");
       initSlider("albumsTodayHit", "todayPrev", "todayNext");
       initSlider("modSlug", "moodPrev", "moodNext");
+      initSlider("morepicks", "morepicksPrev", "morepicksNext");
     })
     .on("albums/details/:slug", (match) => {
       const slug = match.data.slug;

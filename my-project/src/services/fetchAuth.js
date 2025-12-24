@@ -1,12 +1,14 @@
 // FETCH WITH AUTH  dùng chung
 import { refreshToken } from "./api";
 import { navigate } from "../routers/router";
+
 const getAccessToken = () => localStorage.getItem("access_token");
 const clearAuth = () => {
   localStorage.removeItem("access_token");
   localStorage.removeItem("refresh_token");
   localStorage.removeItem("user");
 };
+
 let refreshingPromise = null;
 let isLoggingOut = false;
 export const fetchAuth = async (url, options = {}) => {
@@ -40,6 +42,8 @@ export const fetchAuth = async (url, options = {}) => {
     }
     throw new Error("Phiên đăng nhập hết hạn");
   }
+
+    localStorage.setItem("access_token", newToken);
 
   console.log("[FetchAuth] Retrying request with new token");
   const retryHeaders = { ...(options.headers || {}) };

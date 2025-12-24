@@ -191,21 +191,30 @@ export const updateMe = async (data) => {
 };
 
 // api thay đổi mk
-export const apiChangePassword = async (data) => {
-  try {
-    const res = await fetchAuth(`${BASE_URL}/auth/change-password`, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data),
-    });
-    if (!res.ok) {
-      throw new Error("Cập nhật thất bại");
-    }
+export const apiChangePassword = async ({
+  oldPassword,
+  newPassword,
+  confirmPassword,
+}) => {
+  const res = await fetchAuth(`${BASE_URL}/auth/change-password`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      oldPassword,
+      password: newPassword,
+      confirmPassword,
+    }),
+  });
 
-    return res.json();
-  } catch (error) {
-    console.log(error);
+  const result = await res.json();
+
+  if (!res.ok) {
+    throw new Error(result.message || "Cập nhật thất bại");
   }
+
+  return result;
 };
 
 // api login
@@ -280,7 +289,7 @@ export const logPlayEvent = async ({
       throw new Error("Ghi lịch sử nghe thất bại");
     }
 
-    return res.json();
+    return await res.json();
   } catch (error) {
     console.log(error);
     throw error;

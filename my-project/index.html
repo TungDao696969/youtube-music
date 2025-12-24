@@ -15,10 +15,14 @@
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
   </head>
   <body class="bg-black/95">
+    <div
+      id="toast-container"
+      class="fixed top-5 right-5 z-50 flex flex-col gap-2"
+    ></div>
     <div id="app"></div>
     <script type="module" src="/src/main.js"></script>
 
-    <!-- player Song -->
+    <!-- player Song -->  
     <div
       id="musicPlayer"
       class="fixed bottom-0 left-0 right-0 translate-y-full opacity-0 invisible pointer-events-none transition-all duration-300 ease-out bg-[#0f0f0f] border-t border-white/5 z-50 select-none font-sans"
@@ -86,9 +90,7 @@
               <p
                 id="playerTitle"
                 class="text-sm font-bold text-white truncate max-w-[200px] leading-tight"
-              >
-                
-              </p>
+              ></p>
               <p
                 id="playerArtist"
                 class="text-xs text-[#aaaaaa] truncate max-w-[200px]"

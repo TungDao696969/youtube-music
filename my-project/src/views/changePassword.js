@@ -21,6 +21,7 @@ export default function changePassword() {
                 <input
                 type="password"
                 id="oldPassword"
+                name="oldPassword"
                 class="border border-gray-500 bg-gray-300 rounded-sm p-1"
                 placeholder="Mật khẩu hiện tại"
                 />
@@ -29,7 +30,7 @@ export default function changePassword() {
           <div class="flex flex-col mt-7">
             <p class="text-white text-sm mb-1">Mật khẩu mới</p>
             <input
-              type="password" id="newPassword"
+              type="password" id="newPassword" name="newPassword"
               class="border border-gray-500 bg-gray-300 rounded-sm p-1"
               placeholder="Nhập mật khẩu mới"
             />
@@ -38,7 +39,7 @@ export default function changePassword() {
           <div class="flex flex-col mt-7">
             <p class="text-white text-sm mb-1">Xác nhận mật khẩu mới</p>
             <input
-              type="password" id="confirmPassword"
+              type="password" id="confirmPassword" name="confirmPassword"
               class="border border-gray-500 bg-gray-300 rounded-sm p-1"
               placeholder="Xác nhận mật khẩu mới"
             />

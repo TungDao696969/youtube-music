@@ -1,8 +1,9 @@
 export default function Header() {
   const user = JSON.parse(localStorage.getItem("user") || "null");
   const isLoggedIn = !!user;
-  return `
-        <header class="fixed top-0 left-0 right-0 z-50 bg-black p-4 border-gray-700 flex items-center">
+    return `
+      <div id="toast-container" class="fixed top-10 right-5 z-50 flex flex-col gap-2"></div>
+      <header class="fixed top-0 left-0 right-0 z-50 bg-black p-4 border-gray-700 flex items-center">
       <div class="w-[30px] flex justify-between items-center gap-1 ml-2">
         <i class="fa-solid fa-bars text-white text-xl cursor-pointer"></i>
         <div class="flex items-center gap-0 cursor-pointer">
