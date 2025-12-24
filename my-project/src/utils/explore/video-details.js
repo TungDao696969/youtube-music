@@ -1,11 +1,12 @@
 import { getVideoDetail } from "../../services/api";
-
+import { playMiniVideo } from "./miniYtb-logic";
 let currentTracks = [];
 export const initVideoDetails = async (id) => {
   const container = document.getElementById("videoDetails");
 
   try {
     const video = await getVideoDetail(id);
+    playMiniVideo(video.videoId);
     const related = Array.isArray(video.related) ? video.related : [];
 
     currentTracks = [video, ...related];
@@ -74,8 +75,10 @@ export const initVideoDetails = async (id) => {
                 </div>
             </section>
         `;
+      
+      // playVideo(id);
 
-    container.addEventListener("click", (e) => {
+      container.addEventListener("click", (e) => {
       const row = e.target.closest(".video-row");
       if (!row) return;
 
@@ -104,7 +107,7 @@ const playVideoByIndex = (index) => {
   iframe.src = `https://www.youtube.com/embed/${video.videoId}?autoplay=1`;
   title.textContent = video.title;
   duration.textContent = `Thời lượng: ${formatDuration(video.duration)}`;
-
+  playMiniVideo(video.videoId);
   highlightPlayingVideo(index);
 };
 

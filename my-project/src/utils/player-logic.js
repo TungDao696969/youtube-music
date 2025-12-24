@@ -22,6 +22,9 @@ let isPlaying = false;
 let playQueue = [];
 let currentIndex = -1;
 
+let currentSong = null;
+let hasLoggedPlay = false;
+
 export const setPlayQueue = (queue, index = 0) => {
   playQueue = queue;
   currentIndex = index;
@@ -34,6 +37,9 @@ export const playSong = async ({
   audioUrl,
   thumbnails,
 }) => {
+
+  currentSong = { id };
+  hasLoggedPlay = false;
   // Set UI
   titleEl.textContent = title;
   artistEl.textContent = artist;
@@ -55,14 +61,6 @@ export const playSong = async ({
     "invisible",
     "pointer-events-none"
   );
-
-  if (id) {
-    try {
-      await logPlayEvent({ songId: id });
-    } catch (err) {
-      console.warn("Không lưu được lịch sử nghe", err);
-    }
-  }
 
   document.dispatchEvent(
     new CustomEvent("songchange", {
@@ -124,8 +122,20 @@ audio.addEventListener("loadedmetadata", () => {
 });
 
 audio.addEventListener("timeupdate", () => {
-  if (!audio.duration) return;
+  if (!audio.duration || !currentSong?.id) return;
 
+  // chỉ log 1 lần
+  if (!hasLoggedPlay && audio.currentTime >= 5) {
+    hasLoggedPlay = true;
+
+    logPlayEvent({
+      songId: currentSong.id,
+      playedAt: new Date().toISOString(),
+    }).catch((err) =>
+      console.warn("Không lưu được lịch sử nghe", err)
+    );
+  }
+  
   const percent = (audio.currentTime / audio.duration) * 100;
 
   progress.value = percent;

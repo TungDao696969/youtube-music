@@ -39,26 +39,55 @@ import charts from "../views/explore/charts.js";
 import {
   initChartCountry,
   initChartVideos,
-  initChartArtist
+  initChartArtist,
 } from "../utils/explore/charts-logic.js";
 
 import moodGenres from "../views/explore/mood-and-genres.js";
-import { initMoodGenres, initListLines } from "../utils/explore/mood-and-genres.js";
+import {
+  initMoodGenres,
+  initListLines,
+} from "../utils/explore/mood-and-genres.js";
 import categoriesMood from "../views/explore/categories-slug.js";
 import { initCategoriesSlug } from "../utils/explore/categories-slug.js";
 
 import linesSlug from "../views/explore/lines-slug.js";
-import { initLineSlug, initLinePlaylist, initLineAlbum, initLineVideo } from "../utils/explore/lines-slug.js";
+import {
+  initLineSlug,
+  initLinePlaylist,
+  initLineAlbum,
+  initLineVideo,
+} from "../utils/explore/lines-slug.js";
 import videoDetail from "../views/explore/video-detail.js";
 import { initVideoDetails } from "../utils/explore/video-details.js";
 
+import {
+  initMiniPlayer,
+  playMiniVideo,
+  showMiniPlayer,
+  hideMiniPlayer,
+  hasMiniVideo,
+} from "../utils/explore/miniYtb-logic.js";
 const router = new Navigo("/");
+
+router.hooks({
+  after: (match) => {
+    const url = match?.url || "";
+    const isVideoDetail = url.startsWith("videos/details");
+
+    if (isVideoDetail) {
+      hideMiniPlayer();
+    } else if (hasMiniVideo()) {
+      showMiniPlayer();
+    }
+  },
+});
 
 export function navigate(path) {
   router.navigate(path);
 }
 
 export default function initRouter() {
+  initMiniPlayer();
   router
     .on("/", async () => {
       render(Home());
@@ -105,6 +134,7 @@ export default function initRouter() {
       moodSlugDetail(slug);
       initSlider("albumsForYou", "albumPrev", "albumNext");
       initSlider("albumsTodayHit", "todayPrev", "todayNext");
+      initSlider("modSlug", "moodPrev", "moodNext");
     })
     .on("albums/details/:slug", (match) => {
       const slug = match.data.slug;
@@ -135,6 +165,8 @@ export default function initRouter() {
       render(newReleases());
       initNewReleases();
       initListVideo();
+      initSlider("newReleases", "albumPrev", "albumNext");
+      initSlider("videoNew", "videoPrev", "videoNext");
     })
     .on("explore/charts", () => {
       render(charts());
@@ -147,7 +179,7 @@ export default function initRouter() {
         });
         initChartArtist({
           country: code,
-        })
+        });
       });
     })
     .on("explore/mood-and-genres", () => {
@@ -157,12 +189,12 @@ export default function initRouter() {
       initSlider("moodGenresList", "moodPrev", "moodNext");
       initSlider("moodLines", "linePrev", "lineNext");
     })
-     .on("explore/categories/:slug", (match) => {
+    .on("explore/categories/:slug", (match) => {
       const slug = match.data.slug;
       render(categoriesMood(slug));
       initCategoriesSlug(slug);
     })
-     .on("explore/lines/:slug", (match) => {
+    .on("explore/lines/:slug", (match) => {
       const slug = match.data.slug;
       render(linesSlug(slug));
       initLineSlug(slug);
@@ -172,10 +204,13 @@ export default function initRouter() {
     })
     .on("videos/details/:id", (match) => {
       const id = match.data.id;
+      hideMiniPlayer();
+      
       render(videoDetail(id));
       initVideoDetails(id);
-    })
-    .resolve();
+      playMiniVideo(id);
+    });
+  router.resolve();
 }
 
 function render(html) {

@@ -65,10 +65,10 @@ export const initSearch = () => {
     resultsEl.innerHTML = items
       .map(
         (item) => `
-      <li class="flex gap-3 px-4 py-2 hover:bg-white/10 cursor-pointer" data-id="${
+      <li class="flex items-center gap-3 px-4 py-2 hover:bg-white/10 cursor-pointer" data-id="${
         item.id
       }" data-type ="${item.type}">
-        <img
+           <img
           src="${item.thumbnails}"
           class="w-12 h-12 rounded object-cover"
         />
@@ -77,7 +77,7 @@ export const initSearch = () => {
             ${item.title}
           </p>
           <p class="text-neutral-400 text-xs">
-            ${item.genre || ""}
+            ${item.genre || item.artists || ""}
           </p>  
         </div>
       </li>
@@ -127,6 +127,10 @@ export const initSearch = () => {
 
     if (type === "playlist") {
       navigate(`/playlists/details/${id}`);
+    }
+
+    if(type === "video") {
+      navigate(`videos/details/${id}`);
     }
   });
 };

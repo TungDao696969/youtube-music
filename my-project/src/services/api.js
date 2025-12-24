@@ -1,5 +1,4 @@
-import { navigate } from "../routers/router";
-
+import { fetchAuth } from "./fetchAuth";
 const BASE_URL = "https://youtube-music.f8team.dev/api";
 
 const getAccessToken = () => localStorage.getItem("access_token");
@@ -20,6 +19,7 @@ const clearAuth = () => {
 export const refreshToken = async () => {
   const refresh_token = getRefreshToken();
   if (!refresh_token) {
+    console.warn("[RefreshToken] No refresh token found");
     return null;
   }
 
@@ -27,58 +27,29 @@ export const refreshToken = async () => {
     const res = await fetch(`${BASE_URL}/auth/refresh-token`, {
       method: "POST",
       headers: {
-        "Content-type": "application/json",
+        "Content-Type": "application/json",
       },
-      body: JSON.stringify({ refresh_token }),
+      body: JSON.stringify({
+        refreshToken: refresh_token,
+      }),
     });
 
-    if (!res.ok) {
-      return null;
-    }
+    if (!res.ok) return null;
 
     const data = await res.json();
-    setTokens(data);
+
+    if (data.access_token) {
+      localStorage.setItem("access_token", data.access_token);
+    }
+    if (data.refresh_token) {
+      localStorage.setItem("refresh_token", data.refresh_token);
+    }
+
     return data.access_token;
-  } catch (error) {
-    console.log(error);
+  } catch (err) {
+    console.error("[RefreshToken] Error:", err);
     return null;
   }
-};
-
-// FETCH WITH AUTH  dùng chung
-let refreshingPromise = null;
-const fetchAuth = async (url, options = {}) => {
-  let token = getAccessToken();
-
-  let res = await fetch(url, {
-    ...options,
-    headers: {
-      ...(options.headers || {}),
-      Authorization: token ? `Bearer ${token}` : undefined,
-    },
-  });
-
-  if (res.status !== 401) return res;
-  if (!refreshingPromise) {
-    refreshingPromise = refreshToken();
-  }
-  // access token hết hạn → refresh
-  const newToken = await refreshingPromise;
-
-  if (!newToken) {
-    clearAuth();
-    navigate("/auth");
-    throw new Error("Phiên đăng nhập hết hạn");
-  }
-
-  // gọi lại request cũ
-  return fetch(url, {
-    ...options,
-    headers: {
-      ...(options.headers || {}),
-      Authorization: `Bearer ${newToken}`,
-    },
-  });
 };
 
 // api Đăng kí

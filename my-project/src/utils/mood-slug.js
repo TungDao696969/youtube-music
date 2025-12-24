@@ -1,7 +1,8 @@
 import { getMoodSlug } from "../services/api";
+import { navigate } from "../routers/router";
 export const moodSlugDetail = async (slug) => {
   const container = document.querySelector("#mood-slug");
-
+  
   if (!container) return;
 
   container.innerHTML = `<p class="text-neutral-400">Đang tải...</p>`;
@@ -21,12 +22,12 @@ export const moodSlugDetail = async (slug) => {
 
     container.innerHTML = `
       <section class=" pt-6">
-      <div class="flex items-center justify-between mb-4">
+      <div id="modSlug" class="flex items-center justify-between mb-4">
               <h2 class="text-3xl font-bold">${title}</h2>
 
               <div class="flex gap-5">
-                <button id="albumPrev" class="nav-btn bg-white/10 rounded-full px-2 cursor-pointer"><i class="fa-solid fa-chevron-left"></i></button>
-                <button id="albumNext" class="nav-btn bg-white/10 rounded-full px-2 cursor-pointer"><i class="fa-solid fa-chevron-right"></i></button>
+                <button id="moodPrev" class="nav-btn bg-white/10 rounded-full px-2 cursor-pointer"><i class="fa-solid fa-chevron-left"></i></button>
+                <button id="moodNext" class="nav-btn bg-white/10 rounded-full px-2 cursor-pointer"><i class="fa-solid fa-chevron-right"></i></button>
               </div>
             </div>
 
@@ -50,7 +51,7 @@ export const moodSlugDetail = async (slug) => {
                   class="group w-full cursor-pointer flex items-center gap-3
                          p-3 rounded-lg hover:bg-white/5 transition"
                   data-play-card="true"
-                  data-playlist-id="${item._id || item.slug || ""}"
+                  data-slug="${item.slug}"
                 >
                   <div class="relative">
                     <img
@@ -63,7 +64,7 @@ export const moodSlugDetail = async (slug) => {
                     <div
                       class="absolute inset-0 bg-black/40
                         opacity-0 group-hover:opacity-100
-                        transition flex items-center justify-center"
+                        transition flex items-center justify-center pointer-events-none"
                     >
                       <div
                         class="w-10 h-10 rounded-full
@@ -94,6 +95,14 @@ export const moodSlugDetail = async (slug) => {
         </div>
       </section>
     `;
+
+    container.addEventListener("click", (e) => {
+      const card = e.target.closest("[data-play-card]");
+      if (!card) return;
+
+      const slug = card.dataset.slug;
+      navigate(`/playlists/details/${slug}`);
+    });
   } catch (error) {
     console.log(error);
     container.innerHTML = `

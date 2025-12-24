@@ -19,7 +19,7 @@ export default function Header() {
       <div class="w-[1300px] m-auto flex justify-between">
         <div class="relative w-100 ml-10">
           <i
-            class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-white"
+            class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-gray-50"
           ></i>
           
           <div class="relative w-full max-w-2xl">
