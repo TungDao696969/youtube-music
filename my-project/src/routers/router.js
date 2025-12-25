@@ -12,7 +12,11 @@ import {
 } from "../utils/home-logic.js";
 import Auth from "../views/auth.js";
 import moodSlug from "../views/mood-slug.js";
-import { moodSlugDetail, featuredForyou, morePicks } from "../utils/mood-slug.js";
+import {
+  moodSlugDetail,
+  featuredForyou,
+  morePicks,
+} from "../utils/mood-slug.js";
 import { initAuth, navigateAuth, initRegiter } from "../utils/auth-logic.js";
 import meDetail from "../views/meDetail.js";
 import { initMeDetail } from "../utils/meDetail-logic.js";
@@ -63,22 +67,31 @@ import { initVideoDetails } from "../utils/explore/video-details.js";
 
 import {
   initMiniPlayer,
-  playMiniVideo,
   showMiniPlayer,
   hideMiniPlayer,
-  hasMiniVideo,
-} from "../utils/explore/miniYtb-logic.js";
+  attachYTToMain,
+  attachYTToMini,
+} from "../utils/explore/miniYtb-logic";
+import { hasActiveVideo, getYTPlayer } from "../utils/player-logic.js";
+
 const router = new Navigo("/");
 
 router.hooks({
-  after: (match) => {
-    const url = match?.url || "";
-    const isVideoDetail = url.startsWith("videos/details");
+  after: () => {
+    const isVideoDetail = location.pathname.startsWith("/videos/details");
+    const player = getYTPlayer();
+
+    if (!player) return;
 
     if (isVideoDetail) {
       hideMiniPlayer();
-    } else if (hasMiniVideo()) {
+      attachYTToMain(player);
+      return;
+    }
+
+    if (hasActiveVideo()) {
       showMiniPlayer();
+      attachYTToMini(player);
     }
   },
 });
@@ -209,10 +222,10 @@ export default function initRouter() {
     .on("videos/details/:id", (match) => {
       const id = match.data.id;
       hideMiniPlayer();
-      
+
       render(videoDetail(id));
       initVideoDetails(id);
-      playMiniVideo(id);
+      // playMiniVideo(id);
     });
   router.resolve();
 }
