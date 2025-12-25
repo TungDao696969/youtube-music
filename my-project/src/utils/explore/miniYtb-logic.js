@@ -38,7 +38,6 @@ export function attachYTToMain(ytPlayer) {
   const iframe = ytPlayer.getIframe();
   if (iframe.parentNode === container) return;
 
-  // resume if was paused during mini player
   if (
     ytPlayer.getPlayerState &&
     ytPlayer.getPlayerState() !== YT.PlayerState.PLAYING
@@ -47,31 +46,6 @@ export function attachYTToMain(ytPlayer) {
   }
   container.appendChild(iframe);
 }
-
-// export function attachYTToMini(ytPlayer) {
-//   const container = document.getElementById("miniYTContainer");
-//   if (!container || !ytPlayer) return;
-
-//   const iframe = ytPlayer.getIframe();
-//   if (iframe.parentNode === container) return;
-
-//   // keep playing while moving
-//   const wasPlaying =
-//     ytPlayer.getPlayerState &&
-//     ytPlayer.getPlayerState() === YT.PlayerState.PLAYING;
-//   container.appendChild(iframe);
-//   if (wasPlaying) {
-//     // give it a moment to settle before resuming
-//     setTimeout(() => {
-//       if (
-//         ytPlayer.getPlayerState &&
-//         ytPlayer.getPlayerState() !== YT.PlayerState.PLAYING
-//       ) {
-//         ytPlayer.playVideo();
-//       }
-//     }, 100);
-//   }
-// }
 
 export function attachYTToMini(ytPlayer) {
   const container = document.getElementById("miniYTContainer");
@@ -89,4 +63,16 @@ export function attachYTToMini(ytPlayer) {
   ) {
     ytPlayer.playVideo();
   }
+}
+
+export function destroyMiniPlayer() {
+  if (!miniPlayerEl) return;
+
+  const container = document.getElementById("miniYTContainer");
+  if (container) {
+    container.innerHTML = ""; // xóa iframe
+  }
+
+  miniPlayerEl.remove(); //  remove khỏi DOM
+  miniPlayerEl = null;
 }

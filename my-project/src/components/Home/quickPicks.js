@@ -21,7 +21,7 @@ export default function quickPickCart(item) {
                 </div>
             </div>
         </div>
-            <div>
+            <div class ="flex flex-col justify-center">
                 <h4 class="mt-2 text-lg font-semibold line-clamp-1">${item.title}</h4>
                 <div class = "flex gap-2">
                     <p class="text-sm text-gray-400 line-clamp-1">${item.artists} -</p>

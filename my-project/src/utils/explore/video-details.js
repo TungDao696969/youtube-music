@@ -7,7 +7,11 @@ import {
   setOnVideoPlayCallback,
   playVideo,
 } from "../player-logic.js";
-import { showMiniPlayer, attachYTToMain } from "./miniYtb-logic";
+import {
+  showMiniPlayer,
+  attachYTToMain,
+  attachYTToMini,
+} from "./miniYtb-logic";
 import { getYTPlayer, setYTPlayer } from "../player-logic.js";
 let currentTracks = [];
 
@@ -99,8 +103,32 @@ export const initVideoDetails = async (id) => {
                 </div>
                 </div>
             </section>
+
+            <button id="closeVideoBtn" 
+                class="absolute top-20 right-5 z-50 bg-gray-600 cursor-pointer text-white rounded-full w-10 h-10 flex items-center justify-center hover:bg-red-700 transition">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
         `;
 
+    const closeBtn = document.getElementById("closeVideoBtn");
+    if (closeBtn) {
+      closeBtn.addEventListener("click", () => {
+        const container = document.getElementById("videoDetails");
+        if (!container) return;
+
+        container.classList.add("hidden");
+        showMiniPlayer();
+
+        const player = getYTPlayer();
+        if (player) {
+          attachYTToMini(player);
+        }
+
+        if (window.history && window.history.length > 1) {
+          window.history.back();
+        }
+      });
+    }
     // playVideo(id);
     container.addEventListener("click", (e) => {
       const row = e.target.closest(".video-row");

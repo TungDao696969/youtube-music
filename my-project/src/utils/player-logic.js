@@ -1,4 +1,5 @@
 import { logPlayEvent } from "../services/api";
+import { destroyMiniPlayer } from "./explore/miniYtb-logic";
 const audio = document.getElementById("playerAudio");
 const player = document.getElementById("musicPlayer");
 
@@ -17,6 +18,8 @@ const progressDot = document.getElementById("playerProgressDot");
 
 const btnPrev = document.getElementById("prevSong");
 const btnNext = document.getElementById("nextSong");
+
+const closePlayerBtn = document.getElementById("closePlayerBtn");
 
 let isPlaying = false;
 let playQueue = [];
@@ -92,34 +95,6 @@ const playByIndex = (index) => {
   }
 };
 
-// export const playVideo = (video) => {
-//   if (!currentYTPlayer) return;
-
-//   isVideoMode = true;
-
-//   const index = playQueue.findIndex((item) => item.videoId === video.videoId);
-//   if (index !== -1) currentIndex = index;
-
-//   // 🔥 update UI NGAY
-//   if (onVideoPlayCallback) {
-//     onVideoPlayCallback(currentIndex, video);
-//   }
-
-//   const currentVideoId = currentYTPlayer.getVideoData?.().video_id;
-
-//   if (currentVideoId !== video.videoId) {
-//     attachedVideoId = null;
-//     currentYTPlayer.loadVideoById(video.videoId);
-//     attachYTPlayer(currentYTPlayer, {
-//       title: video.title,
-//       thumbnails: video.thumbnails,
-//     });
-//   }
-
-//   isPlaying = true;
-//   updatePlayIcon();
-// };
-
 export const playVideo = (video) => {
   if (!currentYTPlayer) return;
 
@@ -128,7 +103,6 @@ export const playVideo = (video) => {
   const index = playQueue.findIndex((item) => item.videoId === video.videoId);
   if (index !== -1) currentIndex = index;
 
-  // ✅ LUÔN update bottom bar UI
   titleEl.textContent = video.title || "";
   artistEl.textContent = "Video";
   thumbEl.src = video.thumbnails?.[0] || "";
@@ -173,17 +147,6 @@ playBtn.addEventListener("click", () => {
   updatePlayIcon();
 });
 
-// next song
-// btnNext.addEventListener("click", () => {
-//   if (!playQueue.length) return;
-
-//   currentIndex++;
-//   if (currentIndex >= playQueue.length) {
-//     currentIndex = 0;
-//   }
-
-//   playSong(playQueue[currentIndex]);
-// });
 btnNext.addEventListener("click", () => {
   if (!playQueue.length) return;
 
@@ -192,17 +155,6 @@ btnNext.addEventListener("click", () => {
   playByIndex(nextIndex);
 });
 
-// prev song
-// btnPrev.addEventListener("click", () => {
-//   if (!playQueue.length) return;
-
-//   currentIndex--;
-//   if (currentIndex < 0) {
-//     currentIndex = playQueue.length - 1;
-//   }
-
-//   playSong(playQueue[currentIndex]);
-// });
 btnPrev.addEventListener("click", () => {
   if (!playQueue.length) return;
 
@@ -290,7 +242,7 @@ export const attachYTPlayer = (ytPlayer, meta = {}) => {
 
   audio.pause();
   audio.currentTime = 0;
-  audio.src = "";
+  // audio.src = "";
 
   currentSong = null;
   hasLoggedPlay = false;
@@ -323,14 +275,58 @@ export const attachYTPlayer = (ytPlayer, meta = {}) => {
   }, 500);
 };
 
-export const detachYTPlayer = () => {
+// export const detachYTPlayer = () => {
+//   isVideoMode = false;
+//   currentYTPlayer = null;
+//   // onVideoPlayCallback = null;
+//   if (ytProgressTimer) {
+//     clearInterval(ytProgressTimer);
+//     ytProgressTimer = null;
+//   }
+// };
+
+// export const detachYTPlayer = () => {
+//   isVideoMode = false;
+
+//   if (ytProgressTimer) {
+//     clearInterval(ytProgressTimer);
+//     ytProgressTimer = null;
+//   }
+
+//   if (currentYTPlayer) {
+//     try {
+//       currentYTPlayer.stopVideo();
+//       // currentYTPlayer.destroy();
+//     } catch (e) {}
+//   }
+
+//   currentYTPlayer = null;
+//   attachedVideoId = null;
+
+//   destroyMiniPlayer(); 
+// };
+
+export const detachYTPlayer = (destroy = true) => {
   isVideoMode = false;
-  currentYTPlayer = null;
-  // onVideoPlayCallback = null;
+
   if (ytProgressTimer) {
     clearInterval(ytProgressTimer);
     ytProgressTimer = null;
   }
+
+  if (destroy && currentYTPlayer) {
+    try {
+      currentYTPlayer.stopVideo(); // chỉ khi destroy = true mới stop
+    } catch (e) {}
+  }
+
+  // không reset currentYTPlayer nếu chỉ chuyển sang mini
+  if (destroy) {
+    currentYTPlayer = null;
+    attachedVideoId = null;
+  }
+
+  if (destroy) destroyMiniPlayer();
 };
 
 export const setOnVideoPlayCallback = (callback) => {
@@ -361,4 +357,28 @@ export const getYTPlayer = () => ytPlayer;
 
 export const hasActiveVideo = () => !!ytPlayer;
 
+
+// đóng nhạc
+closePlayerBtn.addEventListener("click", () => {
+  // stop audio
+  audio.pause();
+  audio.currentTime = 0;
+  // audio.src = "";
+
+  detachYTPlayer();
+
+  isPlaying = false;
+  currentSong = null;
+  playQueue = [];
+  currentIndex = -1;
+  updatePlayIcon();
+
+  // ẩn bottom bar
+  player.classList.add(
+    "translate-y-full",
+    "opacity-0",
+    "invisible",
+    "pointer-events-none"
+  );
+});
 

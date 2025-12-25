@@ -306,7 +306,6 @@ export function initSidebarToggle() {
   });
 }
 
-// Set active class on sidebar items based on current location
 export function initSidebarActive() {
   const sidebar = document.getElementById("sidebar");
   if (!sidebar) return;
@@ -317,14 +316,11 @@ export function initSidebarActive() {
   items.forEach((el) => {
     el.classList.remove("active");
     const href = el.getAttribute("href") || "";
-    // normalize
     if (!href) return;
-    // exact match for root
     if (href === "/" && path === "/") {
       el.classList.add("active");
       return;
     }
-    // if href is prefix of path (e.g. /explore and /explore/whatever)
     if (href !== "/" && path.startsWith(href)) {
       el.classList.add("active");
     }
