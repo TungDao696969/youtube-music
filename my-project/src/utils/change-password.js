@@ -1,6 +1,6 @@
 import { navigate } from "../routers/router";
 import { apiChangePassword } from "../services/api";
-import { showAlert } from "./home-logic";
+import { showAlert } from "./showAlert.js";
 export const initChangePassword = async () => {
   const form = document.querySelector("#changePasswordForm");
 

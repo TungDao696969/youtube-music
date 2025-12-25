@@ -1,6 +1,6 @@
 import { navigate } from "../routers/router";
 import { getmeDetail, updateMe } from "../services/api";
-import { showAlert } from "./home-logic";
+import { showAlert } from "./showAlert.js";
 
 export const initMeDetail = async () => {
   const emailInput = document.querySelector("#meEmail");

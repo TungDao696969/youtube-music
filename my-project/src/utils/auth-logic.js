@@ -1,9 +1,10 @@
 import { navigate } from "../routers/router.js";
 import { getAuth, registerAuth, apiLogOut } from "../services/api.js";
-import { showAlert } from "./home-logic.js";
+import { showAlert } from "./showAlert.js";
 
 export const initAuth = () => {
   const btnLogin = document.querySelector("#loginForm");
+  if (!btnLogin) return;
 
   btnLogin.addEventListener("submit", async (e) => {
     e.preventDefault();
@@ -11,17 +12,23 @@ export const initAuth = () => {
     const email = document.getElementById("email").value.trim();
     const password = document.getElementById("password").value.trim();
 
+    if (!email || !password) {
+      showAlert("Vui lòng nhập email và mật khẩu", "error");
+      return;
+    }
+
     try {
       const res = await getAuth({ email, password });
+
       // Lưu token
       localStorage.setItem("access_token", res.access_token);
       localStorage.setItem("refresh_token", res.refresh_token);
       localStorage.setItem("user", JSON.stringify(res.user));
-  
+
       navigate("/");
       showAlert("Đăng nhập thành công", "success");
     } catch (error) {
-      // alert("Email hoặc mật khẩu sai");
+      // Lấy message từ error throw trong getAuth()
       showAlert("Email hoặc mật khẩu sai", "error");
     }
   });
@@ -32,8 +39,8 @@ export function navigateAuth() {
   const registerForm = document.getElementById("registerForm");
   const toRegister = document.getElementById("toRegister");
   const toLogin = document.getElementById("toLogin");
-
-  toRegister.addEventListener("click", () => {
+  toRegister.addEventListener("click", (e) => {
+    e.preventDefault();
     loginForm.classList.add("opacity-0", "scale-95", "pointer-events-none");
     registerForm.classList.remove(
       "opacity-0",
@@ -41,13 +48,12 @@ export function navigateAuth() {
       "pointer-events-none"
     );
   });
-
-  toLogin.addEventListener("click", () => {
+  toLogin.addEventListener("click", (e) => {
+    e.preventDefault();
     registerForm.classList.add("opacity-0", "scale-95", "pointer-events-none");
     loginForm.classList.remove("opacity-0", "scale-95", "pointer-events-none");
   });
 }
-
 export const initRegiter = () => {
   const btnRegiter = document.querySelector("#registerForm");
 
@@ -74,12 +80,14 @@ export const initRegiter = () => {
       !passwordRegiter ||
       !passwordCofirm
     ) {
-      alert("Vui lòng nhập đầy đủ thông tin");
+      // alert("Vui lòng nhập đầy đủ thông tin");
+      showAlert("Vui lòng nhập đầy đủ thông tin", "error");
       return;
     }
 
     if (passwordRegiter !== passwordCofirm) {
-      alert("Mật khẩu nhập lại không khớp");
+      // alert("Mật khẩu nhập lại không khớp");
+      showAlert("Mật khẩu nhập lại không khớp", "error");
       return;
     }
 
@@ -97,7 +105,8 @@ export const initRegiter = () => {
       navigate("/");
       showAlert("Đăng kí thành công. Đã đăng nhập !", "success");
     } catch (error) {
-      alert("Đăng ký thất bại");
+      // alert("Đăng ký thất bại");
+      showAlert("Đăng ký thất bại", "error");
     }
   });
 };
@@ -117,10 +126,8 @@ export const initLogout = async () => {
       localStorage.removeItem("user");
       sessionStorage.clear();
 
-      showAlert("Đăng xuất thành công", "success");
-
-     
       navigate("/auth");
+      showAlert("Đăng xuất thành công", "success");
     } catch (error) {
       showAlert("Đăng xuất thất bại", "error");
     }

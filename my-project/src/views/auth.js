@@ -1,6 +1,6 @@
-
 export default function Auth() {
   return `
+      <div id="toast-container" class="fixed top-5 right-5 z-50 flex flex-col gap-2"></div>
 
            <div
       class="relative w-full h-screen bg-[url('https://wallpapercave.com/wp/wp2417504.jpg')] bg-cover bg-center bg-no-repeat flex items-center justify-center"
@@ -40,12 +40,12 @@ export default function Auth() {
 
           <p class="text-gray-500 text-sm text-center mt-5">
             Bạn chưa có tài khoản?
-            <span onclick="window.routerNavigate('/auth/register')"
+            <a href=""
               id="toRegister"
               class="text-white underline cursor-pointer hover:text-red-400"
             >
               Đăng ký
-            </span>
+            </a>
           </p>
         </div>
       </form>
@@ -106,12 +106,12 @@ export default function Auth() {
 
           <p class="text-gray-500 text-sm text-center mt-5">
             Bạn đã có tài khoản?
-            <span onclick="window.routerNavigate('/auth/register')"
+            <a href=""
               id="toLogin"
               class="text-white underline cursor-pointer hover:text-red-400"
             >
               Đăng nhập
-            </span>
+            </a>
           </p>
         </div>
       </form>

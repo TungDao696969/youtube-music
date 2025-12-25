@@ -73,25 +73,49 @@ export async function registerAuth(data) {
 }
 
 // Api đăng nhập
+// export async function getAuth(payload) {
+//   try {
+//     const res = await fetch(`${BASE_URL}/auth/login`, {
+//       method: "POST",
+//       headers: {
+//         "Content-type": "application/json",
+//       },
+//       body: JSON.stringify(payload),
+//     });
+//     const data = await res.json();
+//     if (!res.ok) {
+//       throw new Error("Login Faied");
+//     }
+//     return data;
+//   } catch (error) {
+//     console.log(error);
+//     throw error;
+//   }
+// }
+
 export async function getAuth(payload) {
   try {
     const res = await fetch(`${BASE_URL}/auth/login`, {
       method: "POST",
       headers: {
-        "Content-type": "application/json",
+        "Content-Type": "application/json",
       },
       body: JSON.stringify(payload),
     });
+
     const data = await res.json();
+
     if (!res.ok) {
-      throw new Error("Login Faied");
+      throw new Error(data.message || "Email hoặc mật khẩu sai");
     }
+
     return data;
   } catch (error) {
-    console.log(error);
+    console.error("getAuth error:", error);
     throw error;
   }
 }
+
 
 // api lấy danh sách gợi í
 export const getPersonalized = async ({ limit = 20 } = {}) => {

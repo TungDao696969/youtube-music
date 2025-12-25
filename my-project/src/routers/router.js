@@ -8,7 +8,6 @@ import {
   initQickPick,
   initPersonalized,
   initListCountry,
-  showAlert,
   initSidebarActive,
 } from "../utils/home-logic.js";
 import Auth from "../views/auth.js";
@@ -75,7 +74,7 @@ import {
   attachYTToMini,
 } from "../utils/explore/miniYtb-logic";
 import { hasActiveVideo, getYTPlayer } from "../utils/player-logic.js";
-
+import { showAlert } from "../utils/showAlert.js";
 const router = new Navigo("/");
 
 router.hooks({
@@ -119,22 +118,34 @@ export default function initRouter() {
       initListCountry();
       initSlider("albumsForYou", "albumPrev", "albumNext");
       initSlider("albumsTodayHit", "todayPrev", "todayNext");
+      initSlider("personalizedList", "bildPrev", "bildNext");
+      showAlert();
     })
     .on("auth", () => {
       render(Auth());
       initAuth();
       navigateAuth();
       initRegiter();
+      showAlert();
     })
+    // .on("/auth/register", () => {
+    //   render(Auth());
+    //   initAuth();
+    //   initRegiter();
+    //   navigateAuth();
+    //   showAlert();
+    // })
     .on("auth/me", () => {
       render(meDetail());
       headerAvatar();
       initMeDetail();
+      showAlert();
     })
     .on("auth/change-password", () => {
       render(changePassword());
       headerAvatar();
       initChangePassword();
+      showAlert();
     })
     .on("auth/logout", async () => {
       try {
@@ -154,6 +165,7 @@ export default function initRouter() {
       initAuth();
       navigateAuth();
       initRegiter();
+      showAlert();
     })
     // Trang chi tiết mood: /mood/:slug
     .on("moods/:slug", (match) => {

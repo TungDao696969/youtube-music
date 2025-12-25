@@ -110,36 +110,6 @@ export const headerAvatar = () => {
   });
 };
 
-// Hàm hiện thị thông báo alert
-export const showAlert = (message, type = "success", duration = 3000) => {
-  const container = document.getElementById("toast-container");
-  if (!container) return;
-
-  const toast = document.createElement("div");
-  toast.textContent = message;
-  toast.className = `
-    px-4 py-2 rounded-lg shadow-lg text-white font-medium
-    transition-opacity duration-300
-    ${type === "success" ? "bg-green-500" : ""}
-    ${type === "error" ? "bg-red-500" : ""}
-    ${type === "info" ? "bg-blue-500" : ""}
-    opacity-0
-  `;
-
-  container.appendChild(toast);
-
-  // Fade in
-  requestAnimationFrame(() => {
-    toast.classList.add("opacity-100");
-  });
-
-  // Tự động ẩn
-  setTimeout(() => {
-    toast.classList.remove("opacity-100");
-    toast.addEventListener("transitionend", () => toast.remove());
-  }, duration);
-};
-
 export const initQickPick = async () => {
   const quickPicks = document.querySelector("#quickPicks");
   if (!quickPicks) return;
@@ -189,12 +159,12 @@ export const initPersonalized = async () => {
     // container.innerHTML = data.map(buildPersonalizedCard).join("");
     container.innerHTML = `
        <section class=" pt-6">
-      <div id="modSlug" class="flex items-center justify-between mb-4">
+      <div id="bild" class="flex items-center justify-between mb-4">
               <h2 class="text-3xl font-bold">Gợi ý trang cá nhân</h2>
 
               <div class="flex gap-5">
-                <button id="moodPrev" class="nav-btn bg-white/10 rounded-full px-2 cursor-pointer"><i class="fa-solid fa-chevron-left"></i></button>
-                <button id="moodNext" class="nav-btn bg-white/10 rounded-full px-2 cursor-pointer"><i class="fa-solid fa-chevron-right"></i></button>
+                <button id="bildPrev" class="nav-btn bg-white/10 rounded-full px-2 cursor-pointer"><i class="fa-solid fa-chevron-left"></i></button>
+                <button id="bildNext" class="nav-btn bg-white/10 rounded-full px-2 cursor-pointer"><i class="fa-solid fa-chevron-right"></i></button>
               </div>
             </div>
 
