@@ -93,8 +93,7 @@ export const moodSlugDetail = async (slug) => {
               `;
             })
             .join("")}
-        </div>
-      </section>
+       
     `;
 
     container.addEventListener("click", (e) => {

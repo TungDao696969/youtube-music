@@ -99,7 +99,7 @@ export const initMoots = async () => {
 export const headerAvatar = () => {
   const btnAvatar = document.querySelector("#btnAvatar");
   const dropdownAvatar = document.querySelector("#dropdownAvatar");
-
+  if (!btnAvatar || !dropdownAvatar) return;
   btnAvatar.addEventListener("click", (e) => {
     e.stopPropagation();
     dropdownAvatar.classList.toggle("hidden");
@@ -171,11 +171,6 @@ export const initPersonalized = async () => {
 
   const token = localStorage.getItem("access_token");
   if (!token) {
-    container.innerHTML = `
-      <p class="text-neutral-400 text-sm">
-        Vui lòng đăng nhập để xem gợi ý cá nhân.
-      </p>
-    `;
     return;
   }
 
@@ -191,7 +186,29 @@ export const initPersonalized = async () => {
       return;
     }
 
-    container.innerHTML = data.map(buildPersonalizedCard).join("");
+    // container.innerHTML = data.map(buildPersonalizedCard).join("");
+    container.innerHTML = `
+       <section class=" pt-6">
+      <div id="modSlug" class="flex items-center justify-between mb-4">
+              <h2 class="text-3xl font-bold">Gợi ý trang cá nhân</h2>
+
+              <div class="flex gap-5">
+                <button id="moodPrev" class="nav-btn bg-white/10 rounded-full px-2 cursor-pointer"><i class="fa-solid fa-chevron-left"></i></button>
+                <button id="moodNext" class="nav-btn bg-white/10 rounded-full px-2 cursor-pointer"><i class="fa-solid fa-chevron-right"></i></button>
+              </div>
+            </div>
+
+        <div class="grid
+            grid-flow-col
+            grid-rows-4
+            auto-cols-[320px]
+            gap-5 
+            overflow-x-auto
+            pb-2 custom-scrollbar">
+        ${data.map(buildPersonalizedCard).join("")}
+       </div>
+      </section>
+    `;
     container.addEventListener("click", async (e) => {
       const card = e.target.closest("[data-personalized-card]");
       if (!card) return;
@@ -257,4 +274,59 @@ export async function initListCountry({ country = "VN", limit = 12 } = {}) {
       </p>
     `;
   }
+}
+
+export function initSidebarToggle() {
+  const btn = document.getElementById("btnToggleSidebar");
+  const sidebar = document.getElementById("sidebar");
+
+  if (!btn || !sidebar) return;
+
+  const open = () => {
+    sidebar.classList.add("expanded");
+    sidebar.classList.remove("w-[72px]");
+    sidebar.classList.remove("w-[240px]");
+    sidebar.classList.add("w-[150px]");
+  };
+
+  const close = () => {
+    sidebar.classList.remove("expanded");
+    sidebar.classList.remove("w-[150px]");
+    sidebar.classList.add("w-[72px]");
+  };
+
+  btn.addEventListener("click", () => {
+    sidebar.classList.contains("expanded") ? close() : open();
+  });
+
+  document.addEventListener("click", (e) => {
+    if (!sidebar.contains(e.target) && !btn.contains(e.target)) {
+      close();
+    }
+  });
+}
+
+// Set active class on sidebar items based on current location
+export function initSidebarActive() {
+  const sidebar = document.getElementById("sidebar");
+  if (!sidebar) return;
+
+  const items = sidebar.querySelectorAll("a.sidebar-item");
+  const path = window.location.pathname || "/";
+
+  items.forEach((el) => {
+    el.classList.remove("active");
+    const href = el.getAttribute("href") || "";
+    // normalize
+    if (!href) return;
+    // exact match for root
+    if (href === "/" && path === "/") {
+      el.classList.add("active");
+      return;
+    }
+    // if href is prefix of path (e.g. /explore and /explore/whatever)
+    if (href !== "/" && path.startsWith(href)) {
+      el.classList.add("active");
+    }
+  });
 }

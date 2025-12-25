@@ -125,9 +125,7 @@ export const playVideo = (video) => {
 
   isVideoMode = true;
 
-  const index = playQueue.findIndex(
-    (item) => item.videoId === video.videoId
-  );
+  const index = playQueue.findIndex((item) => item.videoId === video.videoId);
   if (index !== -1) currentIndex = index;
 
   // ✅ LUÔN update bottom bar UI
@@ -145,7 +143,6 @@ export const playVideo = (video) => {
   isPlaying = true;
   updatePlayIcon();
 };
-
 
 // pause
 playBtn.addEventListener("click", () => {
@@ -363,3 +360,5 @@ export const setYTPlayer = (player) => {
 export const getYTPlayer = () => ytPlayer;
 
 export const hasActiveVideo = () => !!ytPlayer;
+
+

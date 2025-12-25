@@ -4,6 +4,7 @@ export const buildPersonalizedCard = (item = {}) => {
  
 
   return `
+  
     <div
       class="group w-[300px] cursor-pointer flex items-center gap-3 p-3 rounded-lg hover:bg-white/5 transition"
       data-personalized-card
@@ -12,8 +13,10 @@ export const buildPersonalizedCard = (item = {}) => {
       data-id="${item.id || ""}"
       data-song-id="${item.songId || ""}"
     >
+    
       <div class="quick-pick-item cursor-pointer flex gap-2">
       <div class ="relative">
+      
             <img src="${image}" alt="${item.title}" class="w-14 h-14 rounded object-cover flex-shrink-0" />
              <!-- OVERLAY -->
             <div

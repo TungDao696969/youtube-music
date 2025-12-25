@@ -16,7 +16,7 @@ export default function Home() {
           ${
               user
                 ? `<div class="mb-10 text-3xl font-bold">👋 Chào mừng ${user.name}</div>`
-                : `<div class="mb-10 text-neutral-400">Đăng nhập để cá nhân hóa trải nghiệm</div>`
+                : `<div class="mb-10 text-neutral-400"></div>`
             }
 
           <!-- Tags -->
@@ -26,19 +26,7 @@ export default function Home() {
 
           <!-- Personalized -->
           <section class="mb-10">
-            <div class="flex items-center justify-between mb-4">
-              <h2 class="text-3xl font-bold">Gợi ý cho bạn</h2>
-            </div>
-            <div
-              id="personalizedList"
-              class="grid
-                    grid-flow-col
-                    grid-rows-4
-                    gap-3
-                    overflow-x-auto"
-            >
-              <p class="text-neutral-400">Đang tải...</p>
-            </div>
+            <div class="space-y-4" id="personalizedList"></div>
           </section>
 
           <!-- Quick pick-->

@@ -6,15 +6,15 @@ export function initMiniPlayer() {
   miniPlayerEl = document.createElement("div");
   miniPlayerEl.id = "mini-player";
   miniPlayerEl.className = `
-    fixed bottom-24 right-4 z-50
-    w-[320px] h-[180px]
-    bg-black rounded-xl overflow-hidden shadow-xl
-    hidden
-  `;
+      fixed bottom-24 right-4 z-50
+      w-[320px] h-[180px]
+      bg-black rounded-xl overflow-hidden shadow-xl
+      hidden
+    `;
 
   miniPlayerEl.innerHTML = `
-    <div id="miniYTContainer" class="w-full h-full"></div>
-  `;
+      <div id="miniYTContainer" class="w-full h-full"></div>
+    `;
 
   document.body.appendChild(miniPlayerEl);
 }
@@ -48,6 +48,31 @@ export function attachYTToMain(ytPlayer) {
   container.appendChild(iframe);
 }
 
+// export function attachYTToMini(ytPlayer) {
+//   const container = document.getElementById("miniYTContainer");
+//   if (!container || !ytPlayer) return;
+
+//   const iframe = ytPlayer.getIframe();
+//   if (iframe.parentNode === container) return;
+
+//   // keep playing while moving
+//   const wasPlaying =
+//     ytPlayer.getPlayerState &&
+//     ytPlayer.getPlayerState() === YT.PlayerState.PLAYING;
+//   container.appendChild(iframe);
+//   if (wasPlaying) {
+//     // give it a moment to settle before resuming
+//     setTimeout(() => {
+//       if (
+//         ytPlayer.getPlayerState &&
+//         ytPlayer.getPlayerState() !== YT.PlayerState.PLAYING
+//       ) {
+//         ytPlayer.playVideo();
+//       }
+//     }, 100);
+//   }
+// }
+
 export function attachYTToMini(ytPlayer) {
   const container = document.getElementById("miniYTContainer");
   if (!container || !ytPlayer) return;
@@ -55,20 +80,13 @@ export function attachYTToMini(ytPlayer) {
   const iframe = ytPlayer.getIframe();
   if (iframe.parentNode === container) return;
 
-  // keep playing while moving
-  const wasPlaying =
-    ytPlayer.getPlayerState &&
-    ytPlayer.getPlayerState() === YT.PlayerState.PLAYING;
+  iframe.className = "w-full h-full";
   container.appendChild(iframe);
-  if (wasPlaying) {
-    // give it a moment to settle before resuming
-    setTimeout(() => {
-      if (
-        ytPlayer.getPlayerState &&
-        ytPlayer.getPlayerState() !== YT.PlayerState.PLAYING
-      ) {
-        ytPlayer.playVideo();
-      }
-    }, 100);
+
+  if (
+    ytPlayer.getPlayerState &&
+    ytPlayer.getPlayerState() !== YT.PlayerState.PLAYING
+  ) {
+    ytPlayer.playVideo();
   }
 }

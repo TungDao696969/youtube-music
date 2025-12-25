@@ -12,9 +12,9 @@ export default function moodSlug() {
                     <div id="listMoots" class="flex gap-3 mt-6 mb-8"></div>
 
                      <section class = "mb-10">
-                     
                         <div id="mood-slug" class="space-y-4"></div>
                     </section>
+                    
                      <section class = "mb-10">
                         <h2 class = "text-white text-4xl font-bold mb-6">Quick pick</h2>
                         <div id="quickPicks" class="space-y-4"></div>

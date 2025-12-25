@@ -17,7 +17,7 @@ export const initAuth = () => {
       localStorage.setItem("access_token", res.access_token);
       localStorage.setItem("refresh_token", res.refresh_token);
       localStorage.setItem("user", JSON.stringify(res.user));
-
+  
       navigate("/");
       showAlert("Đăng nhập thành công", "success");
     } catch (error) {
@@ -108,8 +108,10 @@ export const initLogout = async () => {
 
   btnLogout.addEventListener("click", async (e) => {
     e.preventDefault();
+
     try {
-      const res = await apiLogOut();
+      await apiLogOut();
+
       localStorage.removeItem("access_token");
       localStorage.removeItem("refresh_token");
       localStorage.removeItem("user");
@@ -117,7 +119,8 @@ export const initLogout = async () => {
 
       showAlert("Đăng xuất thành công", "success");
 
-      navigate("/");
+     
+      navigate("/auth");
     } catch (error) {
       showAlert("Đăng xuất thất bại", "error");
     }

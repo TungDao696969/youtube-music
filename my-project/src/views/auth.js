@@ -1,6 +1,8 @@
+
 export default function Auth() {
   return `
-         <div
+
+           <div
       class="relative w-full h-screen bg-[url('https://wallpapercave.com/wp/wp2417504.jpg')] bg-cover bg-center bg-no-repeat flex items-center justify-center"
     >
       <form id="loginForm" class="transition-all duration-300 ease-out">
@@ -114,6 +116,6 @@ export default function Auth() {
         </div>
       </form>
     </div>
+        
     `;
 }
-

@@ -22,7 +22,7 @@
     <div id="app"></div>
     <script type="module" src="/src/main.js"></script>
 
-    <!-- player Song -->  
+    <!-- player Song -->
     <div
       id="musicPlayer"
       class="fixed bottom-0 left-0 right-0 translate-y-full opacity-0 invisible pointer-events-none transition-all duration-300 ease-out bg-[#0f0f0f] border-t border-white/5 z-50 select-none font-sans"
@@ -139,7 +139,14 @@
             <i class="fa-solid fa-shuffle text-lg"></i>
           </button>
 
-          <button class="hover:text-white transition">
+          <!-- <button class="hover:text-white transition">
+            <i class="fa-solid fa-angle-up text-lg"></i>
+          </button> -->
+          <button
+            id="toggleMiniBtn"
+            class="hover:text-white transition"
+            title="Thu nhỏ video"
+          >
             <i class="fa-solid fa-angle-up text-lg"></i>
           </button>
         </div>

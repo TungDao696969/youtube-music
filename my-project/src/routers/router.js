@@ -9,6 +9,7 @@ import {
   initPersonalized,
   initListCountry,
   showAlert,
+  initSidebarActive,
 } from "../utils/home-logic.js";
 import Auth from "../views/auth.js";
 import moodSlug from "../views/mood-slug.js";
@@ -18,6 +19,7 @@ import {
   morePicks,
 } from "../utils/mood-slug.js";
 import { initAuth, navigateAuth, initRegiter } from "../utils/auth-logic.js";
+import { apiLogOut } from "../services/api.js";
 import meDetail from "../views/meDetail.js";
 import { initMeDetail } from "../utils/meDetail-logic.js";
 import changePassword from "../views/changePassword.js";
@@ -80,18 +82,21 @@ router.hooks({
   after: () => {
     const isVideoDetail = location.pathname.startsWith("/videos/details");
     const player = getYTPlayer();
-
-    if (!player) return;
-
-    if (isVideoDetail) {
-      hideMiniPlayer();
-      attachYTToMain(player);
-      return;
+    if (player) {
+      if (isVideoDetail) {
+        hideMiniPlayer();
+        attachYTToMain(player);
+      } else if (hasActiveVideo()) {
+        showMiniPlayer();
+        attachYTToMini(player);
+      }
     }
 
-    if (hasActiveVideo()) {
-      showMiniPlayer();
-      attachYTToMini(player);
+    // update sidebar active state after each navigation
+    try {
+      initSidebarActive();
+    } catch (err) {
+      // ignore if sidebar not present
     }
   },
 });
@@ -131,9 +136,21 @@ export default function initRouter() {
       headerAvatar();
       initChangePassword();
     })
-    .on("auth/logout", () => {
+    .on("auth/logout", async () => {
+      try {
+        await apiLogOut();
+      } catch (error) {
+        console.error("Logout API error:", error);
+      }
+
+      // Xóa token và user khỏi localStorage
+      localStorage.removeItem("access_token");
+      localStorage.removeItem("refresh_token");
+      localStorage.removeItem("user");
+      sessionStorage.clear();
+
+      // Sau đó render Auth page
       render(Auth());
-      initLogout();
       initAuth();
       navigateAuth();
       initRegiter();

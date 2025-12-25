@@ -1,11 +1,16 @@
 export default function Header() {
-  const user = JSON.parse(localStorage.getItem("user") || "null");
-  const isLoggedIn = !!user;
-    return `
+  const token = localStorage.getItem("access_token");
+  const user = token
+    ? JSON.parse(localStorage.getItem("user") || "null")
+    : null;
+  const isLoggedIn = !!token && !!user;
+  return `
       <div id="toast-container" class="fixed top-10 right-5 z-50 flex flex-col gap-2"></div>
       <header class="fixed top-0 left-0 right-0 z-50 bg-black p-4 border-gray-700 flex items-center">
-      <div class="w-[30px] flex justify-between items-center gap-1 ml-2">
-        <i class="fa-solid fa-bars text-white text-xl cursor-pointer"></i>
+      <div class="w-[30px] flex justify-between items-center gap-1">
+        <i id="btnToggleSidebar" class="fa-solid fa-bars text-white text-xl cursor-pointer  p-2 rounded-lg
+    hover:bg-white/10
+    hover:scale-110"></i>
         <div class="flex items-center gap-0 cursor-pointer">
           <img
             src="https://logos-world.net/wp-content/uploads/2021/04/Youtube-Music-Logo.png"
@@ -20,7 +25,7 @@ export default function Header() {
       <div class="w-[1300px] m-auto flex justify-between">
         <div class="relative w-100 ml-10">
           <i
-            class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-gray-50"
+            class="fa-solid fa-magnifying-glass absolute left-5 top-1/2 -translate-y-1/2 text-gray-50"
           ></i>
           
           <div class="relative w-full max-w-2xl">
@@ -28,7 +33,7 @@ export default function Header() {
             id="searchInput"
             type="text"
             placeholder="Search..."
-            class="bg-[#292929]/90 pl-10 pr-3 py-2 rounded-lg w-[500px] focus:outline-none text-white"
+            class="bg-[#292929]/90 pl-10 pr-3 py-2 rounded-lg w-[500px] focus:outline-none text-white ml-2"
           />
           <div
             id="searchDropdown"
@@ -58,7 +63,10 @@ export default function Header() {
 }
 function renderLoginButton() {
   return `
-    <a href="/auth" class="px-4 py-1 rounded-full bg-white text-black font-medium">
+    <a
+      href="/auth"
+      class="px-4 py-1 rounded-full bg-white text-black font-medium"
+    >
       Đăng nhập
     </a>
   `;
@@ -78,7 +86,7 @@ function renderAvatar(name) {
                bg-[#2a2a2a] rounded-lg shadow-lg overflow-hidden z-50">
       <a href="/auth/me" class="mb-4 cursor-pointer hover:bg-gray-500 p-2">Thông tin người dùng</a>
       <a href="/auth/change-password" class="mb-4 cursor-pointer hover:bg-gray-500 p-2">Đổi mật khẩu</a>
-      <a href="/auth/logout" id="btnLogout" class="text-red-600 text-left cursor-pointer hover:bg-gray-500 p-2">Đăng xuất</a>
+      <a href="/auth/logout" id="btnLogout" class="text-red-500 cursor-pointer hover:bg-gray-500 p-2">Đăng xuất</a>
     </div>
   </div>
   `;
