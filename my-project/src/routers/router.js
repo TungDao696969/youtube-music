@@ -75,6 +75,9 @@ import {
 } from "../utils/explore/miniYtb-logic";
 import { hasActiveVideo, getYTPlayer } from "../utils/player-logic.js";
 import { showAlert } from "../utils/showAlert.js";
+import searchPage from "../views/searchResult.js";
+import { initSearchPage } from "../utils/search-page.js";
+import { initSearch } from "../utils/search-logic.js";
 const router = new Navigo("/");
 
 router.hooks({
@@ -94,6 +97,7 @@ router.hooks({
     // update sidebar active state after each navigation
     try {
       initSidebarActive();
+      initSearch();
     } catch (err) {
       // ignore if sidebar not present
     }
@@ -255,6 +259,12 @@ export default function initRouter() {
       render(videoDetail(id));
       initVideoDetails(id);
       // playMiniVideo(id);
+    })
+    .on("search", () => {
+      render(searchPage());
+      setTimeout(() => {
+        initSearchPage();
+      });
     });
   router.resolve();
 }

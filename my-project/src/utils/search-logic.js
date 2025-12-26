@@ -106,8 +106,7 @@ export const initSearch = () => {
       if (!keyword) return;
 
       dropdown.classList.add("hidden");
-      const data = await searchResult({ q: keyword });
-      renderResults(data.results || []);
+      navigate(`/search?q=${encodeURIComponent(keyword)}`);
     }
   });
 
@@ -130,7 +129,7 @@ export const initSearch = () => {
     }
 
     if(type === "video") {
-      navigate(`videos/details/${id}`);
+      navigate(`/videos/details/${id}`);
     }
   });
 };
