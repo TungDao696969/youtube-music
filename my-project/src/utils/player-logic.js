@@ -35,6 +35,8 @@ let onVideoPlayCallback = null;
 let ytPlayer = null;
 let attachedVideoId = null;
 
+let isPlayerDestroyed = false;
+
 export const setPlayQueue = (queue, index = 0) => {
   playQueue = queue;
   currentIndex = index;
@@ -96,7 +98,8 @@ const playByIndex = (index) => {
 };
 
 export const playVideo = (video) => {
-  if (!currentYTPlayer) return;
+  resetPlayerDestroyed();
+  // if (!currentYTPlayer) return;
 
   isVideoMode = true;
 
@@ -112,8 +115,10 @@ export const playVideo = (video) => {
     onVideoPlayCallback(currentIndex, video);
   }
 
-  currentYTPlayer.loadVideoById(video.videoId);
-
+  // currentYTPlayer.loadVideoById(video.videoId);
+  if (currentYTPlayer) {
+    currentYTPlayer.loadVideoById(video.videoId);
+  }
   isPlaying = true;
   updatePlayIcon();
 };
@@ -227,6 +232,8 @@ volume.addEventListener("input", () => {
 export const getCurrentIndex = () => currentIndex;
 
 export const attachYTPlayer = (ytPlayer, meta = {}) => {
+  if (isPlayerDestroyed) return;
+
   currentYTPlayer = ytPlayer;
   isVideoMode = true;
 
@@ -303,7 +310,7 @@ export const attachYTPlayer = (ytPlayer, meta = {}) => {
 //   currentYTPlayer = null;
 //   attachedVideoId = null;
 
-//   destroyMiniPlayer(); 
+//   destroyMiniPlayer();
 // };
 
 export const detachYTPlayer = (destroy = true) => {
@@ -357,28 +364,62 @@ export const getYTPlayer = () => ytPlayer;
 
 export const hasActiveVideo = () => !!ytPlayer;
 
+// cờ đóng video khong hiện lại
+export const markPlayerDestroyed = () => {
+  isPlayerDestroyed = true;
+};
+
+export const resetPlayerDestroyed = () => {
+  isPlayerDestroyed = false;
+};
+
+export const isDestroyed = () => isPlayerDestroyed;
+
+// dấu x ở thanh bar quay về trang trước
+let isInVideoDetail = false;
+
+export const setInVideoDetail = (val) => {
+  isInVideoDetail = val;
+};
+
+export const getInVideoDetail = () => isInVideoDetail;
+
 
 // đóng nhạc
 closePlayerBtn.addEventListener("click", () => {
+  const inDetail = getInVideoDetail();
   // stop audio
   audio.pause();
   audio.currentTime = 0;
-  // audio.src = "";
+
+  // destroy YT
+  const yt = getYTPlayer();
+  if (yt) {
+    yt.stopVideo();
+    yt.destroy();
+    setYTPlayer(null);
+  }
 
   detachYTPlayer();
+  markPlayerDestroyed();
 
+  // reset state
   isPlaying = false;
   currentSong = null;
   playQueue = [];
   currentIndex = -1;
-  updatePlayIcon();
 
-  // ẩn bottom bar
+  // ẩn UI
   player.classList.add(
     "translate-y-full",
     "opacity-0",
     "invisible",
     "pointer-events-none"
   );
-});
 
+  //nếu đang ở video detail → back
+  if (inDetail && window.history.length > 1) {
+    setInVideoDetail(false);
+    window.history.back();
+  }
+});

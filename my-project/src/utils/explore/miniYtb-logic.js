@@ -1,3 +1,4 @@
+import { isDestroyed } from "../player-logic";
 let miniPlayerEl = null;
 
 export function initMiniPlayer() {
@@ -20,6 +21,7 @@ export function initMiniPlayer() {
 }
 
 export function showMiniPlayer() {
+  if (isDestroyed()) return;
   initMiniPlayer();
   miniPlayerEl.classList.remove("hidden");
   miniPlayerEl.style.pointerEvents = "auto";
@@ -76,3 +78,17 @@ export function destroyMiniPlayer() {
   miniPlayerEl.remove(); //  remove khỏi DOM
   miniPlayerEl = null;
 }
+
+// reset mini vieo khi vào trang khác
+export const resetMiniPlayer = () => {
+  const mini = document.getElementById("mini-player"); 
+  if (!mini) return;
+
+  mini.classList.add("hidden");
+  mini.style.pointerEvents = "none";
+
+  const container = document.getElementById("miniYTContainer");
+  if (container) {
+    container.innerHTML = ""; 
+  }
+};

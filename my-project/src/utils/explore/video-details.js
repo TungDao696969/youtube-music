@@ -13,6 +13,8 @@ import {
   attachYTToMini,
 } from "./miniYtb-logic";
 import { getYTPlayer, setYTPlayer } from "../player-logic.js";
+import { resetPlayerDestroyed, setInVideoDetail } from "../player-logic.js";
+import { resetMiniPlayer } from "./miniYtb-logic";
 let currentTracks = [];
 
 const loadYouTubeAPI = () => {
@@ -40,8 +42,18 @@ const loadYouTubeAPI = () => {
 };
 
 export const initVideoDetails = async (id) => {
-  const container = document.getElementById("videoDetails");
+  setInVideoDetail(true);
+  resetPlayerDestroyed();
 
+  // resetmini video
+  resetMiniPlayer();
+
+  const yt = getYTPlayer();
+  if (yt) {
+    attachYTToMain(yt);
+  }
+  const container = document.getElementById("videoDetails");
+   container.classList.remove("hidden");
   try {
     const video = await getVideoDetail(id);
     // playMiniVideo(video.videoId);
@@ -111,20 +123,22 @@ export const initVideoDetails = async (id) => {
         `;
 
     const closeBtn = document.getElementById("closeVideoBtn");
+
     if (closeBtn) {
       closeBtn.addEventListener("click", () => {
         const container = document.getElementById("videoDetails");
-        if (!container) return;
+        if (container) {
+          container.classList.add("hidden");
+        }
+        const yt = getYTPlayer();
+        if (yt) {
+          // detachYTPlayer(false);
+          attachYTToMini(yt);
+          showMiniPlayer();
+        }
 
-        container.classList.add("hidden");
-        showMiniPlayer();
-
-        const player = getYTPlayer();
-        // if (player) {
-        //   attachYTToMini(player);
-        // }
-        attachYTPlayer(player);
         if (window.history && window.history.length > 1) {
+          setInVideoDetail(false);
           window.history.back();
         }
       });
