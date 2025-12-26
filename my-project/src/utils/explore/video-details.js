@@ -120,10 +120,10 @@ export const initVideoDetails = async (id) => {
         showMiniPlayer();
 
         const player = getYTPlayer();
-        if (player) {
-          attachYTToMini(player);
-        }
-
+        // if (player) {
+        //   attachYTToMini(player);
+        // }
+        attachYTPlayer(player);
         if (window.history && window.history.length > 1) {
           window.history.back();
         }
