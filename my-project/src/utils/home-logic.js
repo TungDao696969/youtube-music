@@ -294,5 +294,15 @@ export function initSidebarActive() {
     if (href !== "/" && path.startsWith(href)) {
       el.classList.add("active");
     }
+
+    // Thêm event listener để prevent default và navigate
+    // Kiểm tra xem đã có listener chưa để tránh double-binding
+    if (!el.dataset.listenerAttached) {
+      el.addEventListener("click", (e) => {
+        e.preventDefault();
+        navigate(href);
+      });
+      el.dataset.listenerAttached = "true";
+    }
   });
 }

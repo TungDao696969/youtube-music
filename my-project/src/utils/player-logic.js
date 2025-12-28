@@ -36,6 +36,7 @@ let ytPlayer = null;
 let attachedVideoId = null;
 
 let isPlayerDestroyed = false;
+let isPlayerVisible = false; // Track if player should be visible
 
 export const setPlayQueue = (queue, index = 0) => {
   playQueue = queue;
@@ -49,7 +50,8 @@ export const playSong = async ({
   audioUrl,
   thumbnails,
 }) => {
-  detachYTPlayer();
+  resetPlayerDestroyed();
+  detachYTPlayer(false);
   currentSong = { id };
   hasLoggedPlay = false;
   // Set UI
@@ -64,6 +66,7 @@ export const playSong = async ({
 
   audio.play();
   isPlaying = true;
+  isPlayerVisible = true; // Mark player as visible
   updatePlayIcon();
 
   // Show player
@@ -102,6 +105,7 @@ export const playVideo = (video) => {
   // if (!currentYTPlayer) return;
 
   isVideoMode = true;
+  isPlayerVisible = true; // Mark player as visible
 
   const index = playQueue.findIndex((item) => item.videoId === video.videoId);
   if (index !== -1) currentIndex = index;
@@ -255,6 +259,7 @@ export const attachYTPlayer = (ytPlayer, meta = {}) => {
   hasLoggedPlay = false;
 
   isPlaying = true;
+  isPlayerVisible = true; // Mark player as visible
   updatePlayIcon();
 
   player.classList.remove(
@@ -362,7 +367,7 @@ export const setYTPlayer = (player) => {
 
 export const getYTPlayer = () => ytPlayer;
 
-export const hasActiveVideo = () => !!ytPlayer;
+export const hasActiveVideo = () => !!currentYTPlayer;
 
 // cờ đóng video khong hiện lại
 export const markPlayerDestroyed = () => {
@@ -384,6 +389,25 @@ export const setInVideoDetail = (val) => {
 
 export const getInVideoDetail = () => isInVideoDetail;
 
+// Restore player display if it's playing
+export const restorePlayerDisplay = () => {
+  // Check if player should be visible
+  if (isPlayerVisible) {
+    player.classList.remove(
+      "translate-y-full",
+      "opacity-0",
+      "invisible",
+      "pointer-events-none"
+    );
+
+    // Resume audio nếu nó đang phát
+    if (isPlaying && audio.src && !isVideoMode) {
+      audio.play().catch((err) => {
+        console.warn("Could not resume audio:", err);
+      });
+    }
+  }
+};
 
 // đóng nhạc
 closePlayerBtn.addEventListener("click", () => {
@@ -400,11 +424,12 @@ closePlayerBtn.addEventListener("click", () => {
     setYTPlayer(null);
   }
 
-  detachYTPlayer();
+  detachYTPlayer(true);
   markPlayerDestroyed();
 
   // reset state
   isPlaying = false;
+  isPlayerVisible = false; // Reset visibility flag
   currentSong = null;
   playQueue = [];
   currentIndex = -1;

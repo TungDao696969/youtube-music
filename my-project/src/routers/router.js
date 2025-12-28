@@ -73,7 +73,11 @@ import {
   attachYTToMain,
   attachYTToMini,
 } from "../utils/explore/miniYtb-logic";
-import { hasActiveVideo, getYTPlayer } from "../utils/player-logic.js";
+import {
+  hasActiveVideo,
+  getYTPlayer,
+  restorePlayerDisplay,
+} from "../utils/player-logic.js";
 import { showAlert } from "../utils/showAlert.js";
 import searchPage from "../views/searchResult.js";
 import { initSearchPage } from "../utils/search-page.js";
@@ -84,6 +88,9 @@ router.hooks({
   after: () => {
     const isVideoDetail = location.pathname.startsWith("/videos/details");
     const player = getYTPlayer();
+
+    restorePlayerDisplay();
+
     if (player) {
       if (isVideoDetail) {
         hideMiniPlayer();
